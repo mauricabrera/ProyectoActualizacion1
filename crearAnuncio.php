@@ -85,34 +85,50 @@ $mysql = new Mysql();
 
     <!-- Begin page content -->
     <div class="container">
-      <form class="form-signin">
+        
+<!--
+        <form action="" method="post" enctype="multipart/form-data">
+<p>Pictures:
+<input type="file" name="pictures[]" class="btn btn-lg btn-primary btn-block" />
+<input type="file" name="pictures[]" />
+<input type="file" name="pictures[]" />
+<input type="submit" value="Send" />
+</p>
+</form>
+-->
+        
+      <form class="form-signin"  id="formulario" method="post" action="api/introtipoclasificado">
         <h2 class="form-signin-heading" style="text-align : center;">Crear Anuncio</h2>
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="remember-me"> Remember me
-          </label>
-        </div>
-		<?php
-		$query = "SELECT nombre FROM tipoclasificado";
-		$res = $mysql->query($query);
-		if($res == null) {
-				echo "nohay";
-			}
-			else{ echo "hay";}
-		
-		echo "<select>";
-		foreach ($res as $row){
-			 echo "<option>".$row["tipoclasificado"]["nombre"]."</option>";
-			}				
-		echo "</select>";
-		?>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="ver();">Sign in</button>
+        <label for="inputTitulo" class="">Titulo de Anuncio</label>
+        <input type="text" id="inputTitulo" class="form-control" placeholder="Título" required autofocus name="titulo">
+        <label for="inputTexto" class="">Descripción</label>
+          <textarea type="text" id="inputTexto" class="form-control" placeholder="Descripcion" required autofocus name="texto"></textarea>
+       
+          <label for="tipoclasificado" class="">Seleccione categoria:</label>
+          <select name="tipoclasificado" id="tipoclasificado">
+<!--        
+          <select name="tipoclasificado" id="tipoclasificado">
+              <option value="1">1</option>
+              <option value="2">2</option>
+          </select>
+-->
+         <?php
+            $query = "SELECT * FROM tipoclasificado order by nombre asc";
+            $res = $mysql->query($query);
+            foreach ($res as $row){
+                 echo "<option value=".$row["tipoclasificado"]["id_tipoclasificado"].">".$row["tipoclasificado"]["nombre"]."</option>";
+                }				
+            ?>
+              </select>
+          
+            <div id="fileuploader">Escojer imagenes</div>
+                <label id="eventsmessage"></label>
+            </div>
+        
+        <button class="btn btn-lg btn-primary btn-block" id="start" type="submit">Submit</button>
       </form>
-    </div>
+	  
+	 
 
     <footer class="footer">
       <div class="container">
@@ -127,8 +143,49 @@ $mysql = new Mysql();
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
     <script src="js/jquery-1.11.2.min.js"> </script> 
 
+	<link href="css/uploadfile.css" rel="stylesheet">
+	<script src="js/jquery.uploadfile.js"></script>
+
 	<script src="js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="js/ie10-viewport-bug-workaround.js"></script>
+	<script>
+$(document).ready(function()
+{
+	var uploadObj = $("#fileuploader").uploadFile({
+		url:"php/upload.php",
+		maxFileCount: 2,
+		autoSubmit:false,
+		multiple: true,
+		abortStr:"Cancelado",
+		cancelStr:"Cancelar",
+		doneStr:"Subido",
+		allowedTypes: "jpg,jpeg,png,gif",
+		showPreview: true,
+		previewWidth: "50px",
+		previewHeight: "50px",
+		returnType: "json",
+		fileName:"myfile",   
+        onSuccess:function(files,data,xhr)
+        {
+	       $("#eventsmessage").html($("#eventsmessage").html()+"<br/>Success for: "+JSON.stringify(data));
+	       $("#eventsmessage").html($("#eventsmessage").html()+"<br/>Success for: "+JSON.stringify(files));
+	       alert(data); 
+	       console.log(files); 
+	       console.log(xhr); 
+	
+        }
+	});
+	
+	$("#starte").click(function()
+	{
+	uploadObj.startUpload();
+	//alert(uploadObj.getResponses());
+	});
+	
+	
+});
+
+</script>
   </body>
 </html>
