@@ -1,6 +1,17 @@
 <?php
+
+define("SPECIALCONSTANT", true);
+
+require '../api/app/libs/connect.php';
+
 $output_dir = "uploads/";
 
+//$titulo = $_POST["titulo"];
+//$id_usuario = 1;
+//        $texto = $_POST["texto"];
+//        $tipoclasificado = $_POST["tipoclasificado"];
+//            
+//        $imagen = "urlimagen";
 
 if(isset($_FILES["myfile"]))
 {
@@ -17,7 +28,7 @@ if(isset($_FILES["myfile"]))
 	//If Any browser does not support serializing of multiple files using FormData() 
 	date_default_timezone_set("America/La_Paz");
 		$t = time();
-		$dat = date("dmYHi", $t);
+		$dat = date("dmYHis", $t);
 	if(!is_array($_FILES["myfile"]["name"])) //single file
 	{
 		
@@ -37,5 +48,42 @@ if(isset($_FILES["myfile"]))
 	
 	}
     echo json_encode($ret);
+    
+//    try{   
+//        
+//        
+//        $db = connect_db();
+//      
+//        $stmt = mysqli_prepare($db, "INSERT INTO `clasificados`.`clasificado` (`id_clasificado`, `titulo`, `id_usuario`, `texto`, `id_tipoclasificado`, `imagen1`, `imagen2`, `imagen3`, `imagen4`, `imagen5`, `imagen6`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, ?, ?, ?, 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+//
+//            if ($stmt === false) {
+//                trigger_error('Statement failed! ' . htmlspecialchars(mysqli_error($db)), E_USER_ERROR);
+//            }
+//
+//           // $id_clasificado = null;
+//            $bind = mysqli_stmt_bind_param($stmt, "sisiss", $titulo, $id_usuario, $texto, $tipoclasificado, $ret[0], $ret[0]);
+//
+//            if ($bind === false) {
+//                trigger_error('Bind param failed!', E_USER_ERROR);
+//            } 
+//
+//            $exec = mysqli_stmt_execute($stmt);
+//
+//            if ($exec === false) {
+//                trigger_error('Statement execute failed! ' . htmlspecialchars(mysqli_stmt_error($stmt)), E_USER_ERROR);	
+//            }
+//
+//
+//        echo json_encode(mysqli_insert_id($db));
+//        mysqli_close($db);
+//       
+//
+//	}
+//	catch(PDOException $e)
+//	{
+//		echo "Error: " . $e->getMessage();
+//	}
+//    
+    
  }
  ?>

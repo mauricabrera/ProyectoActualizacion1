@@ -30,19 +30,10 @@ $mysql = new Mysql();
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-	<script type="text/javascript">
-			function ver(){
-			$.ajax({     
-			 type: "GET",     
-			 url: "responder.php", 
-			 dataType: "json",  
-			 success: function(data){     
-			 //do your stuff with the JSON data
-			 $("#content_div").append(data.ci);
-			 }
-			 }); 
-			}
-	</script>
+       <script src="js/jquery-1.11.2.min.js"> </script> 
+      <link href="css/uploadfile.css" rel="stylesheet">
+	<script src="js/jquery.uploadfile.js"></script>
+
   </head>
 
   <body>
@@ -86,48 +77,31 @@ $mysql = new Mysql();
     <!-- Begin page content -->
     <div class="container">
         
-<!--
-        <form action="" method="post" enctype="multipart/form-data">
-<p>Pictures:
-<input type="file" name="pictures[]" class="btn btn-lg btn-primary btn-block" />
-<input type="file" name="pictures[]" />
-<input type="file" name="pictures[]" />
-<input type="submit" value="Send" />
-</p>
-</form>
--->
-        
-      <form class="form-signin"  id="formulario" method="post" action="api/introtipoclasificado">
+      <form class="form-signin"  id="formulario" method="post">
         <h2 class="form-signin-heading" style="text-align : center;">Crear Anuncio</h2>
         <label for="inputTitulo" class="">Titulo de Anuncio</label>
-        <input type="text" id="inputTitulo" class="form-control" placeholder="Título" required autofocus name="titulo">
+        <input type="text" id="inputTitulo" class="form-control" placeholder="Título" required autofocus name="titulo" value="titulao" ></input>
         <label for="inputTexto" class="">Descripción</label>
-          <textarea type="text" id="inputTexto" class="form-control" placeholder="Descripcion" required autofocus name="texto"></textarea>
+          <textarea type="text" id="inputTexto" class="form-control" placeholder="Descripcion" required autofocus name="texto" value="descripcion"  ></textarea>
        
-          <label for="tipoclasificado" class="">Seleccione categoria:</label>
-          <select name="tipoclasificado" id="tipoclasificado">
-<!--        
-          <select name="tipoclasificado" id="tipoclasificado">
-              <option value="1">1</option>
-              <option value="2">2</option>
-          </select>
--->
-         <?php
-            $query = "SELECT * FROM tipoclasificado order by nombre asc";
-            $res = $mysql->query($query);
-            foreach ($res as $row){
-                 echo "<option value=".$row["tipoclasificado"]["id_tipoclasificado"].">".$row["tipoclasificado"]["nombre"]."</option>";
-                }				
-            ?>
-              </select>
+              <label for="tipoclasificado" class="">Seleccione categoria:</label>
+              <select name="tipoclasificado" id="tipoclasificado">
+                     <?php
+                        $query = "SELECT * FROM tipoclasificado order by nombre asc";
+                        $res = $mysql->query($query);
+                        foreach ($res as $row){
+                             echo "<option value=".$row["tipoclasificado"]["id_tipoclasificado"].">".$row["tipoclasificado"]["nombre"]."</option>";
+                            }				
+                    ?>
+               </select>
           
-            <div id="fileuploader">Escojer imagenes</div>
+        <div id="fileuploader">Escojer imagenes</div>
                 <label id="eventsmessage"></label>
-            </div>
         
-        <button class="btn btn-lg btn-primary btn-block" id="start" type="submit">Submit</button>
+        
+        <button class="btn btn-lg btn-primary"  type="submit">Submit</button>
       </form>
-	  
+	  </div>
 	 
 
     <footer class="footer">
@@ -141,47 +115,103 @@ $mysql = new Mysql();
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
-    <script src="js/jquery-1.11.2.min.js"> </script> 
+   
 
-	<link href="css/uploadfile.css" rel="stylesheet">
-	<script src="js/jquery.uploadfile.js"></script>
+	
 
 	<script src="js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="js/ie10-viewport-bug-workaround.js"></script>
 	<script>
 $(document).ready(function()
-{
+{       
+    var resultdata = [];
+    
 	var uploadObj = $("#fileuploader").uploadFile({
-		url:"php/upload.php",
-		maxFileCount: 2,
 		autoSubmit:false,
+		url: "php/upload.php",
+        maxFileCount: 2,
 		multiple: true,
-		abortStr:"Cancelado",
-		cancelStr:"Cancelar",
+		cancelStr:"Eliminar",
 		doneStr:"Subido",
 		allowedTypes: "jpg,jpeg,png,gif",
 		showPreview: true,
 		previewWidth: "50px",
 		previewHeight: "50px",
-		returnType: "json",
-		fileName:"myfile",   
+		fileName:"myfile",
+        onSubmit:function(files)
+            {
+                $("#eventsmessage").html($("#eventsmessage").html()+"<br/>Submitting:"+JSON.stringify(files));
+            },
         onSuccess:function(files,data,xhr)
-        {
-	       $("#eventsmessage").html($("#eventsmessage").html()+"<br/>Success for: "+JSON.stringify(data));
-	       $("#eventsmessage").html($("#eventsmessage").html()+"<br/>Success for: "+JSON.stringify(files));
-	       alert(data); 
-	       console.log(files); 
-	       console.log(xhr); 
-	
-        }
-	});
-	
-	$("#starte").click(function()
-	{
-	uploadObj.startUpload();
-	//alert(uploadObj.getResponses());
-	});
+            {
+                $("#eventsmessage").html($("#eventsmessage").html()+"<br/>Success for: "+JSON.stringify(data));
+                resultdata.push(data);
+
+            },
+        afterUploadAll:function(obj)
+            {
+                $("#eventsmessage").html($("#eventsmessage").html()+"<br/>All files are uploaded"+obj);
+                
+                console.log(obj);
+                console.log(obj.getResponses());
+                
+                var respond = obj.getResponses();
+                
+                for (var i = 0; i < respond.length; i++){
+                    $("#eventsmessage").html($("#eventsmessage").html()+"<br/>All files are uploaded and file name"+i+respond[i]);
+                    console.log("<br/>All files are uploaded and file name"+i+respond[i]);
+                }
+                
+                for (var i = 0; i < resultdata.length; i++){
+                    $("#eventsmessage").html($("#eventsmessage").html()+"<br/>All files are uploaded and file name"+i+resultdata[i]);
+                    console.log("<br/>All files are uploaded and file name"+i+resultdata[i]);
+                }
+                
+                   var dataString = $('#formulario').serialize();
+
+                    console.log('Datos serializados: '+dataString);
+                    $.ajax({
+                        type: "POST",
+                        url: "api/introclasificado",
+                        data: {formulario: JSON.stringify(dataString), imagenes : JSON.stringify(respond)},
+                        success: function(data) {
+                           
+                            console.log(data);
+                            alert("¡Clasificado insertado!");
+                            window.location.reload();
+                        },
+                        error: function(data){
+                            
+                            console.log(data);
+                        }
+
+                    });
+
+            },
+        onError: function(files,status,errMsg)
+            {
+                $("#eventsmessage").html($("#eventsmessage").html()+"<br/>Error for: "+JSON.stringify(files));
+            }
+	   });
+    
+    $('#formulario').on('submit', function(e) { //use on if jQuery 1.7+
+        e.preventDefault();  //prevent form from submitting
+        var data = $('#formulario').serialize();
+        //console.log(data); //use the console for debugging, F12 in Chrome, not alerts
+        
+        console.log(data);    
+        
+      //  uploadObj.update({formData: $('#formulario').serialize()});
+        
+                uploadObj.startUpload();
+        
+//        console.log(uploadObj.getResponses());
+
+        
+        
+        
+    });
 	
 	
 });

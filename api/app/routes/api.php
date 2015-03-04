@@ -132,6 +132,78 @@ $app->get("/tipoclasificado/:id", function($id) use($app)
 });
 
 
+$app->post("/introclasificado", function() use($app)
+{
+    
+  try{   
+      
+      $formulario = $app->request->post('formulario');
+
+    parse_str($formulario, $form_array);
+    $str = json_decode($app->request->post('imagenes'), true);  
+    
+//    $app->response->headers->set("Content-type", "application/json");
+//		$app->response->status(200);
+//		$app->response->body(json_encode($form_array['"titulo']));
+      
+        $titulo = $form_array['"titulo'];
+        $id_usuario = 1;
+        $texto = $form_array["texto"];
+        $tipoclasificado = $form_array["tipoclasificado"];
+
+        $db = connect_db();
+      
+      $paquitar = array('"', "[", "]");
+      
+      if ($str[0] == null){
+        $stmt = mysqli_prepare($db, "INSERT INTO `clasificados`.`clasificado` (`id_clasificado`, `titulo`, `id_usuario`, `texto`, `id_tipoclasificado`, `imagen1`, `imagen2`, `imagen3`, `imagen4`, `imagen5`, `imagen6`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, ?, 'urlimagen1', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+          $bind = mysqli_stmt_bind_param($stmt, "sisi", $titulo, $id_usuario, $texto, $tipoclasificado);
+          
+      } elseif (!isset($str[1])){
+        $stmt = mysqli_prepare($db, "INSERT INTO `clasificados`.`clasificado` (`id_clasificado`, `titulo`, `id_usuario`, `texto`, `id_tipoclasificado`, `imagen1`, `imagen2`, `imagen3`, `imagen4`, `imagen5`, `imagen6`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, ?, ?, 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+          $bind = mysqli_stmt_bind_param($stmt, "sisis", $titulo, $id_usuario, $texto, $tipoclasificado, str_replace($paquitar, "", $str[0]));
+      } elseif (!isset($str[2])){
+        $stmt = mysqli_prepare($db, "INSERT INTO `clasificados`.`clasificado` (`id_clasificado`, `titulo`, `id_usuario`, `texto`, `id_tipoclasificado`, `imagen1`, `imagen2`, `imagen3`, `imagen4`, `imagen5`, `imagen6`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, ?, ?, ?, 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+          $bind = mysqli_stmt_bind_param($stmt, "sisiss", $titulo, $id_usuario, $texto, $tipoclasificado, str_replace($paquitar, "", $str[0]), str_replace($paquitar, "", $str[1]));
+      }
+      
+//      
+//        $stmt = mysqli_prepare($db, "INSERT INTO `clasificados`.`clasificado` (`id_clasificado`, `titulo`, `id_usuario`, `texto`, `id_tipoclasificado`, `imagen1`, `imagen2`, `imagen3`, `imagen4`, `imagen5`, `imagen6`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, ?, ?, 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+
+            if ($stmt === false) {
+                trigger_error('Statement failed! ' . htmlspecialchars(mysqli_error($db)), E_USER_ERROR);
+            }
+
+           // $id_clasificado = null;
+
+            if ($bind === false) {
+                trigger_error('Bind param failed!', E_USER_ERROR);
+            } 
+
+            $exec = mysqli_stmt_execute($stmt);
+
+            if ($exec === false) {
+                trigger_error('Statement execute failed! ' . htmlspecialchars(mysqli_stmt_error($stmt)), E_USER_ERROR);	
+            }
+
+        $app->response->headers->set("Content-type", "application/json");
+		$app->response->status(200);
+		$app->response->body(json_encode(mysqli_insert_id($db)));
+        mysqli_close($db);
+
+       //  $app->redirect('../crearAnuncio.php');
+       
+
+	}
+	catch(PDOException $e)
+	{
+		echo "Error: " . $e->getMessage();
+	}
+    
+	
+});
+
+
 $app->post("/introtipoclasificado/", function() use($app)
 {
     
@@ -166,9 +238,7 @@ $app->post("/introtipoclasificado/", function() use($app)
                 trigger_error('Statement execute failed! ' . htmlspecialchars(mysqli_stmt_error($stmt)), E_USER_ERROR);	
             }
 
-        echo '<script language="javascript">';
-echo 'alert("clasifiado successfully insertado!")';
-echo '</script>';
+
         
         
         //printf ("New Record has id %d.\n", mysqli_insert_id($db));
