@@ -165,6 +165,18 @@ $app->post("/introclasificado", function() use($app)
       } elseif (!isset($str[2])){
         $stmt = mysqli_prepare($db, "INSERT INTO `clasificados`.`clasificado` (`id_clasificado`, `titulo`, `id_usuario`, `texto`, `id_tipoclasificado`, `imagen1`, `imagen2`, `imagen3`, `imagen4`, `imagen5`, `imagen6`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, ?, ?, ?, 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
           $bind = mysqli_stmt_bind_param($stmt, "sisiss", $titulo, $id_usuario, $texto, $tipoclasificado, str_replace($paquitar, "", $str[0]), str_replace($paquitar, "", $str[1]));
+      } elseif (!isset($str[3])){
+        $stmt = mysqli_prepare($db, "INSERT INTO `clasificados`.`clasificado` (`id_clasificado`, `titulo`, `id_usuario`, `texto`, `id_tipoclasificado`, `imagen1`, `imagen2`, `imagen3`, `imagen4`, `imagen5`, `imagen6`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, 'urlimagen4', 'urlimagen5', 'urlimagen6', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+          $bind = mysqli_stmt_bind_param($stmt, "sisisss", $titulo, $id_usuario, $texto, $tipoclasificado, str_replace($paquitar, "", $str[0]), str_replace($paquitar, "", $str[1]), str_replace($paquitar, "", $str[2]));
+      } elseif (!isset($str[4])){
+        $stmt = mysqli_prepare($db, "INSERT INTO `clasificados`.`clasificado` (`id_clasificado`, `titulo`, `id_usuario`, `texto`, `id_tipoclasificado`, `imagen1`, `imagen2`, `imagen3`, `imagen4`, `imagen5`, `imagen6`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, 'urlimagen5', 'urlimagen6', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+          $bind = mysqli_stmt_bind_param($stmt, "sisissss", $titulo, $id_usuario, $texto, $tipoclasificado, str_replace($paquitar, "", $str[0]), str_replace($paquitar, "", $str[1]), str_replace($paquitar, "", $str[2]), str_replace($paquitar, "", $str[3]));
+      } elseif (!isset($str[5])){
+        $stmt = mysqli_prepare($db, "INSERT INTO `clasificados`.`clasificado` (`id_clasificado`, `titulo`, `id_usuario`, `texto`, `id_tipoclasificado`, `imagen1`, `imagen2`, `imagen3`, `imagen4`, `imagen5`, `imagen6`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'urlimagen6', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+          $bind = mysqli_stmt_bind_param($stmt, "sisisssss", $titulo, $id_usuario, $texto, $tipoclasificado, str_replace($paquitar, "", $str[0]), str_replace($paquitar, "", $str[1]), str_replace($paquitar, "", $str[2]), str_replace($paquitar, "", $str[3]), str_replace($paquitar, "", $str[4]));
+      } elseif (!isset($str[6])){
+        $stmt = mysqli_prepare($db, "INSERT INTO `clasificados`.`clasificado` (`id_clasificado`, `titulo`, `id_usuario`, `texto`, `id_tipoclasificado`, `imagen1`, `imagen2`, `imagen3`, `imagen4`, `imagen5`, `imagen6`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+          $bind = mysqli_stmt_bind_param($stmt, "sisissssss", $titulo, $id_usuario, $texto, $tipoclasificado, str_replace($paquitar, "", $str[0]), str_replace($paquitar, "", $str[1]), str_replace($paquitar, "", $str[2]), str_replace($paquitar, "", $str[3]), str_replace($paquitar, "", $str[4]), str_replace($paquitar, "", $str[5]));
       }
       
 //      
@@ -255,6 +267,106 @@ $app->post("/introtipoclasificado/", function() use($app)
 	catch(PDOException $e)
 	{
 		echo "Error: " . $e->getMessage();
+	}
+    
+	
+});
+
+
+$app->post("/actualizarclasificado/", function() use($app)
+{
+    
+  try{   
+        $id_clasificado = $app->request->post('id_clasificado');
+        $titulo = $app->request->post('titulo');
+        $texto = $app->request->post('texto');
+        $id_tipoclasificado = $app->request->post('id_tipoclasificado');
+
+        $db = connect_db();
+      
+        $stmt = mysqli_prepare($db, "UPDATE `clasificados`.`clasificado` SET `titulo` = ?, `texto` = ?, `id_tipoclasificado` = ? WHERE `clasificado`.`id_clasificado` = ?");
+
+            if ($stmt === false) {
+                trigger_error('Statement failed! ' . htmlspecialchars(mysqli_error($db)), E_USER_ERROR);
+            }
+
+           // $id_clasificado = null;
+            $bind = mysqli_stmt_bind_param($stmt, "ssii", $titulo, $texto, $id_tipoclasificado, $id_clasificado);
+
+            if ($bind === false) {
+                trigger_error('Bind param failed!', E_USER_ERROR);
+            } 
+
+            $exec = mysqli_stmt_execute($stmt);
+
+            if ($exec === false) {
+                trigger_error('Statement execute failed! ' . htmlspecialchars(mysqli_stmt_error($stmt)), E_USER_ERROR);	
+            }
+
+        $app->response->headers->set("Content-type", "application/json");
+		$app->response->status(200);
+		$app->response->body(json_encode(true));
+      //  mysqli_stmt_close($stmt);
+        mysqli_close($db);
+
+       
+
+	}
+	catch(PDOException $e)
+	{
+		echo "Error: " . $e->getMessage();
+        $app->response->headers->set("Content-type", "application/json");
+		$app->response->status(200);
+		$app->response->body(json_encode(false));
+	}
+    
+	
+});
+
+
+
+$app->post("/eliminarclasificado/", function() use($app)
+{
+    
+  try{   
+        $id_clasificado = $app->request->post('id_clasificado');
+
+        $db = connect_db();
+      
+        $stmt = mysqli_prepare($db, "DELETE FROM `clasificados`.`clasificado` WHERE `clasificado`.`id_clasificado` = ?");
+
+            if ($stmt === false) {
+                trigger_error('Statement failed! ' . htmlspecialchars(mysqli_error($db)), E_USER_ERROR);
+            }
+
+           // $id_clasificado = null;
+            $bind = mysqli_stmt_bind_param($stmt, "i", $id_clasificado);
+
+            if ($bind === false) {
+                trigger_error('Bind param failed!', E_USER_ERROR);
+            } 
+
+            $exec = mysqli_stmt_execute($stmt);
+
+            if ($exec === false) {
+                trigger_error('Statement execute failed! ' . htmlspecialchars(mysqli_stmt_error($stmt)), E_USER_ERROR);	
+            }
+
+        $app->response->headers->set("Content-type", "application/json");
+		$app->response->status(200);
+		$app->response->body(json_encode(true));
+      //  mysqli_stmt_close($stmt);
+        mysqli_close($db);
+
+       
+
+	}
+	catch(PDOException $e)
+	{
+		echo "Error: " . $e->getMessage();
+        $app->response->headers->set("Content-type", "application/json");
+		$app->response->status(200);
+		$app->response->body(json_encode(false));
 	}
     
 	

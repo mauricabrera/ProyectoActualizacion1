@@ -80,9 +80,9 @@ $mysql = new Mysql();
       <form class="form-signin"  id="formulario" method="post">
         <h2 class="form-signin-heading" style="text-align : center;">Crear Anuncio</h2>
         <label for="inputTitulo" class="">Titulo de Anuncio</label>
-        <input type="text" id="inputTitulo" class="form-control" placeholder="Título" required autofocus name="titulo" value="titulao" ></input>
+        <input type="text" id="inputTitulo" class="form-control" placeholder="Título" required autofocus name="titulo" ></input>
         <label for="inputTexto" class="">Descripción</label>
-          <textarea type="text" id="inputTexto" class="form-control" placeholder="Descripcion" required autofocus name="texto" value="descripcion"  ></textarea>
+          <textarea type="text" id="inputTexto" class="form-control" placeholder="Descripcion" required autofocus name="texto" ></textarea>
        
               <label for="tipoclasificado" class="">Seleccione categoria:</label>
               <select name="tipoclasificado" id="tipoclasificado">
@@ -130,7 +130,7 @@ $(document).ready(function()
 	var uploadObj = $("#fileuploader").uploadFile({
 		autoSubmit:false,
 		url: "php/upload.php",
-        maxFileCount: 2,
+        maxFileCount: 6,
 		multiple: true,
 		cancelStr:"Eliminar",
 		doneStr:"Subido",
