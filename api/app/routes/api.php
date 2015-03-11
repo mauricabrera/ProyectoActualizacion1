@@ -372,52 +372,5 @@ $app->post("/eliminarclasificado/", function() use($app)
 	
 });
 
-$app->post("/modificarpassword/", function() use($app)
-{
-    
-  try{   
-        $id_clasificado = $app->request->post('password1');
-
-        $db = connect_db();
-      
-        $stmt = mysqli_prepare($db, "UPDATE `clasificados`.`usuario` SET `password` = ? WHERE `usuario`.`id_usuario` = 1");
-
-            if ($stmt === false) {
-                trigger_error('Statement failed! ' . htmlspecialchars(mysqli_error($db)), E_USER_ERROR);
-            }
-
-           // $id_clasificado = null;
-            $bind = mysqli_stmt_bind_param($stmt, "s", $id_clasificado);
-
-            if ($bind === false) {
-                trigger_error('Bind param failed!', E_USER_ERROR);
-            } 
-
-            $exec = mysqli_stmt_execute($stmt);
-
-            if ($exec === false) {
-                trigger_error('Statement execute failed! ' . htmlspecialchars(mysqli_stmt_error($stmt)), E_USER_ERROR);	
-            }
-
-        $app->response->headers->set("Content-type", "application/json");
-		$app->response->status(200);
-		$app->response->body(json_encode(true));
-      //  mysqli_stmt_close($stmt);
-        mysqli_close($db);
-
-       
-
-	}
-	catch(PDOException $e)
-	{
-		echo "Error: " . $e->getMessage();
-        $app->response->headers->set("Content-type", "application/json");
-		$app->response->status(200);
-		$app->response->body(json_encode(false));
-	}
-    
-	
-});
-
 
 ?>

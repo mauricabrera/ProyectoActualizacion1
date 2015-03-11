@@ -17,6 +17,12 @@ $mysql = new Mysql();
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+<!--    <link href="css/jquery.dataTables.min.css" rel="stylesheet">-->
+      <link href="css/dataTables.bootstrap.css" rel="stylesheet">
+      
+
+    <!-- Custom styles for this template -->
+<!--    <link href="css/crearAnuncio.css" rel="stylesheet">-->
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -121,11 +127,11 @@ $mysql = new Mysql();
         <form id="formulario">
             <input type="hidden" class="form-control" id="id_clasificado" name="id_clasificado">
           <div class="form-group">
-            <label for="recipient-name" class="control-label">Título:</label>
+            <label for="recipient-name" class="control-label">Recipient:</label>
             <input type="text" class="form-control" id="recipient-name" name="titulo">
           </div>
           <div class="form-group">
-            <label for="message-text" class="control-label">Descripción:</label>
+            <label for="message-text" class="control-label">Message:</label>
             <textarea class="form-control" id="message-text" name="texto"></textarea>
           </div>
             <div class="form-group">
@@ -201,6 +207,9 @@ $mysql = new Mysql();
 	<script src="js/jquery-1.11.2.min.js"> </script> 
 
 	<script src="js/bootstrap.min.js"></script>
+      
+      <script src="js/jquery.dataTables.min.js"></script>
+      <script src="js/dataTables.bootstrap.js"></script>
       
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="js/ie10-viewport-bug-workaround.js"></script>

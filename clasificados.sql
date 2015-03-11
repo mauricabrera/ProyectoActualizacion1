@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 11-03-2015 a las 20:38:15
+-- Tiempo de generación: 09-03-2015 a las 05:22:05
 -- Versión del servidor: 5.6.16-log
 -- Versión de PHP: 5.5.11
 
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `clasificado` (
   PRIMARY KEY (`id_clasificado`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_tipoclasificado` (`id_tipoclasificado`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=154 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=151 ;
 
 --
 -- Volcado de datos para la tabla `clasificado`
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `clasificado` (
 
 INSERT INTO `clasificado` (`id_clasificado`, `titulo`, `id_usuario`, `texto`, `id_tipoclasificado`, `imagen1`, `imagen2`, `imagen3`, `imagen4`, `imagen5`, `imagen6`, `created_at`, `updated_at`) VALUES
 (4, 'Primer Clasificadooote! :)', 1, 'este es el primer texto', 58, 'urlimagen1', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-01 20:37:07', '2015-03-09 03:59:07'),
-(7, 'Porfies Diosito', 1, '!!! :):)\r\n', 58, 'urlimagen1', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-01 20:40:29', '2015-03-11 19:17:42'),
+(7, 'Porfies Diosito', 1, '!!!', 1, 'urlimagen1', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-01 20:40:29', '2015-03-09 03:48:39'),
 (10, 'Porfies Diosito', 1, 'again', 61, 'urlimagen1', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-01 20:41:09', '2015-03-02 00:41:09'),
 (13, 'es', 1, 'alert', 58, 'urlimagen1', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-01 20:42:33', '2015-03-02 00:42:33'),
 (16, 'esa', 1, 'eeehcon alert', 67, 'urlimagen1', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-01 20:42:54', '2015-03-02 00:42:54'),
@@ -66,6 +66,7 @@ INSERT INTO `clasificado` (`id_clasificado`, `titulo`, `id_usuario`, `texto`, `i
 (43, 'titulo', 1, 'texto', 1, 'urlimagen', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-02 12:20:23', '2015-03-02 16:20:23'),
 (46, 'titulo', 1, 'texto', 1, '020320151221edgrandes.png', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-02 12:21:17', '2015-03-02 16:21:17'),
 (49, 'titulao', 1, 'texto', 1, '020320151228edpeques.png', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-02 12:28:46', '2015-03-02 16:28:46'),
+(52, '', 1, 'texto', 1, '020320151232edpeques.png', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-02 12:32:39', '2015-03-02 16:32:39'),
 (55, '', 1, 'texto', 1, '020320151233edgrandes.png', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-02 12:33:01', '2015-03-02 16:33:01'),
 (61, 'toS', 1, 'texto', 1, '020320151238edgrandes.png', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-02 12:38:48', '2015-03-02 16:38:48'),
 (64, 'toS', 1, 'texto', 1, '020320151241edpeques.png', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-02 12:41:25', '2015-03-02 16:41:25'),
@@ -87,13 +88,13 @@ INSERT INTO `clasificado` (`id_clasificado`, `titulo`, `id_usuario`, `texto`, `i
 (112, ' ihnrtiun', 1, '', 1, '030320150902edpeques.png', '030320150902edpeques.png', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-03 09:02:26', '2015-03-03 13:02:26'),
 (115, ' ihnrtiun', 1, '', 1, '030320150903edpeques.png', '030320150903edpeques.png', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-03 09:03:32', '2015-03-03 13:03:32'),
 (118, ' ihnrtiun', 1, '', 1, '030320150903edpeques.png', '030320150903edpeques.png', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-03 09:03:32', '2015-03-03 13:03:32'),
-(124, 'titulao', 1, 'esa eeh', 58, '030320150935edpeques.png', '030320150935edpeques.png', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-03 09:35:39', '2015-03-09 12:47:20'),
+(121, 'titulao', 1, '', 1, '030320150935edgrandes.png', '030320150935edgrandes.png', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-03 09:35:39', '2015-03-03 13:35:39'),
+(124, 'titulao', 1, '', 1, '030320150935edpeques.png', '030320150935edpeques.png', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-03 09:35:39', '2015-03-03 13:35:39'),
 (127, 'ejhe', 1, 'ejhe', 7, '["04032015002436edpeques.png"]', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-04 00:24:36', '2015-03-04 04:24:36'),
 (130, 'eeseshj', 1, 'eeseshj', 7, '["04032015002538edpeques.png"]', '["04032015002538edgrandes.png"]', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-04 00:25:38', '2015-03-04 04:25:38'),
 (133, 'graciasDiosito!', 1, 'graciasDiosito!', 7, '04032015003124edpeques.png', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-04 00:31:24', '2015-03-04 04:31:24'),
 (145, 'Primer Anuncio!!', 1, 'FINAL!1', 10, '09032015001410captImp400.png', '09032015001410Captura.PNG', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-09 00:14:10', '2015-03-09 04:14:10'),
-(148, 'Porfies Diosito!!! GRACIAS!!!', 1, 'AHORA SI!! CON 6!!!', 7, '090320150019388327285.gif', '090320150019381902729_223707354489185_109966398_n.jpg', '09032015001938captImp400.png', '09032015001938Captura.PNG', '09032015001938chacharichabraaa.PNG', '09032015001938captImp.png', '2015-03-09 00:19:38', '2015-03-09 04:26:43'),
-(151, 'Hola! :)', 1, 'esa es Gracias Diosito!', 67, '11032015150328captImp400.png', '11032015150328chacharichabraaa.PNG', '110320151503281902729_223707354489185_109966398_n.jpg', '11032015150328Captura.PNG', '11032015150328captImp.png', '110320151503288327285.gif', '2015-03-11 15:03:29', '2015-03-11 19:03:49');
+(148, 'Porfies Diosito', 1, 'AHORA SI!! CON 6!!!', 1, '090320150019388327285.gif', '090320150019381902729_223707354489185_109966398_n.jpg', '09032015001938captImp400.png', '09032015001938Captura.PNG', '09032015001938chacharichabraaa.PNG', '09032015001938captImp.png', '2015-03-09 00:19:38', '2015-03-09 04:19:38');
 
 -- --------------------------------------------------------
 
@@ -162,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `usuario`, `password`, `nombres`, `apellidos`, `telefono`, `email`, `created_at`, `updated_at`) VALUES
-(1, 'mauricabrera', 'EEE111eee', 'Mauricio', 'Cabrera Estrada', ' 7077777', 'cabrera.mauri@gmail.com', '2015-03-01 20:34:18', '2015-03-11 19:32:56');
+(1, 'mauricabrera', 'mauricabrera', 'Mauricio', 'Cabrera Estrada', ' 7077777', 'cabrera.mauri@gmail.com', '2015-03-01 20:34:18', '2015-03-02 00:34:35');
 
 --
 -- Restricciones para tablas volcadas
