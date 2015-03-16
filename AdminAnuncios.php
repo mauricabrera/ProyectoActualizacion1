@@ -1,6 +1,15 @@
 <?php
 require_once('libs/Mysql.php');
 $mysql = new Mysql();
+session_start();
+
+function redirect($url, $statusCode = 303)
+{
+   header('Location: ' . $url, true, $statusCode);
+   die();
+}
+
+echo $_SESSION['id_usuario'];
 ?>
 
 <!DOCTYPE html>
@@ -52,7 +61,11 @@ $mysql = new Mysql();
             <li><a href="#contact">Usuarios</a></li>
           </ul>
             <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="./">Administrador<span class="sr-only">(current)</span></a></li>
+            <li class="active"><a>Administrador <?php if (isset($_SESSION['id_usuario'])){
+echo $_SESSION['usuario'];
+}
+else { echo "nay";
+     }?><button class="btn btn-default" type="button">Cerrar Sesión</button></a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

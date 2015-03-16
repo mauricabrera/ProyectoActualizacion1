@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+function redirect($url, $statusCode = 303)
+{
+   header('Location: ' . $url, true, $statusCode);
+   die();
+}
+
+if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SESSION['password'])){
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -41,12 +52,17 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="#">Clasificados</a></li>
-            <li><a href="#about">Crear Anuncio</a></li>
-            <li class="active"><a href="#contact">Modificar Password</a></li>
+            <li><a href="listarAnuncios.php">Clasificados</a></li>
+            <li><a href="crearAnuncio.php">Crear Anuncio</a></li>
+            <li class="active"><a>Modificar Password</a></li>
           </ul>
+            
             <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="./">Bienvenido!! ...<span class="sr-only">(current)</span></a></li>
+            <li class="active"><a>¡Bienvenido! <?php if (isset($_SESSION['id_usuario'])){
+                                            echo $_SESSION['usuario'];
+                                            }
+                                            else { echo "nay";}?>
+                <button type="button" class="btn btn-danger btn-xs" id="logout">Cerrar Sesión</button></a> </li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -131,9 +147,41 @@
             })
           
       </script>
+    
+    <script>
+          $( "#logout" ).click(function() {
+              //alert("loggiaout!");
+                    $.ajax({
+                        type: "GET",
+                        url: "api/logout",
+                        success: function(data) {
+                            console.log(data)
+                            if(data == true){
+                            window.location.replace("listarAnuncios.php");
+                               // window.location.href = "AdminAnuncios.php";
+                            }
+                            if(data == false){
+                            alert("Algo salio mal!!")
+                            }
+//                            location.reload(true)
+                        },
+                        error: function(data){
+                            console.log(data)
+                        }
+
+                    })       
+            })
+          
+      </script>
 
       
       
       
   </body>
 </html>
+<?php
+}
+else {
+      redirect("listaranuncios.php", $statusCode = 303);
+}
+?>

@@ -147,7 +147,13 @@ $app->post("/introclasificado", function() use($app)
 //		$app->response->body(json_encode($form_array['"titulo']));
       
         $titulo = $form_array['"titulo'];
-        $id_usuario = 1;
+      session_start();
+      if(isset($_SESSION['id_usuario'])){
+          $id_usuario = $_SESSION['id_usuario'];
+      }else {     
+            $id_usuario = 1;
+      }
+      
         $texto = $form_array["texto"];
         $tipoclasificado = $form_array["tipoclasificado"];
 
@@ -419,5 +425,113 @@ $app->post("/modificarpassword/", function() use($app)
 	
 });
 
+
+$app->get("/login/:usuario/:password", function($usuario, $password) use($app)
+{
+	try{
+
+        $db = connect_db();
+    
+	$result = $db->query( "SELECT * FROM usuario WHERE usuario like '".$usuario."' and password like '".$password."'" );
+        if($result === false) {
+          trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->errno . ' ' . $conn->error, E_USER_ERROR);
+        }
+        
+        if (mysqli_connect_errno()) {
+            die("Falló la conexión: %s\n".$mysqli->connect_error);
+        }
+
+        while ( $row = $result->fetch_array(MYSQLI_ASSOC) ) {
+		$data[] = $row;
+        
+	   }
+        $resulta = mysqli_num_rows($result);
+        
+        if($resulta == 0) {
+        $app->response->headers->set("Content-type", "application/json");
+		$app->response->status(200);
+		$app->response->body(json_encode(false));
+        }
+        else {
+        session_start();
+            
+            $_SESSION['id_usuario'] = $data[0]["id_usuario"];
+            $_SESSION['usuario'] = $data[0]["usuario"];
+            $_SESSION["password"] = md5($data[0]["password"]);
+          //  echo $_SESSION['id_usuario'];
+            $app->response->headers->set("Content-type", "application/json");
+		    $app->response->status(200);
+		    $app->response->body(json_encode(true));
+//            $app->redirect('../AdminAnuncios.php');
+        }
+	}
+	catch(PDOException $e)
+	{
+		echo "Error: " . $e->getMessage();
+	}
+});
+
+
+$app->post("/RegistrarUsuario/", function() use($app)
+{
+    
+  try{   
+        $id_usuario = $app->request->post('id_usuario');
+        $usuario = $app->request->post('usuario');
+        $password = $app->request->post('password1');
+        $nombres = $app->request->post('nombres');
+        $apellidos = $app->request->post('apellidos');
+        $telefono = $app->request->post('telefono');
+        $email = $app->request->post('email');
+
+        $db = connect_db();
+
+        $stmt = mysqli_prepare($db, "INSERT INTO `clasificados`.`usuario` ( `usuario`, `password`, `nombres`, `apellidos`, `telefono`, `email`, `created_at`) VALUES (?, ?, ?, ?, ?,?, CURRENT_TIMESTAMP)");
+
+            if ($stmt === false) {
+                trigger_error('Statement failed! ' . htmlspecialchars(mysqli_error($db)), E_USER_ERROR);
+            }
+
+        $bind = mysqli_stmt_bind_param($stmt, "ssssis", $usuario, $password, $nombres, $apellidos, $telefono, $email);
+
+            if ($bind === false) {
+                trigger_error('Bind param failed!', E_USER_ERROR);
+            } 
+
+            $exec = mysqli_stmt_execute($stmt);
+
+            if ($exec === false) {
+                trigger_error('Statement execute failed! ' . htmlspecialchars(mysqli_stmt_error($stmt)), E_USER_ERROR); 
+            }
+
+        $app->response->headers->set("Content-type", "application/json");
+    $app->response->status(200);
+    $app->response->body(json_encode(true));
+        mysqli_close($db);
+
+       
+
+  }
+  catch(PDOException $e)
+  {
+    echo "Error: " . $e->getMessage();
+        $app->response->headers->set("Content-type", "application/json");
+    $app->response->status(200);
+    $app->response->body(json_encode(false));
+  }
+    
+  
+});
+
+$app->get("/logout", function() use($app) {
+    session_start();
+    session_destroy(); 
+          
+    $app->response->headers->set("Content-type", "application/json");
+    $app->response->status(200);
+    $app->response->body(json_encode(true));
+    
+
+});
 
 ?>
