@@ -9,7 +9,7 @@ function redirect($url, $statusCode = 303)
    die();
 }
 
-echo $_SESSION['id_usuario'];
+if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SESSION['password']) && ($_SESSION['admin'] == 1)){
 ?>
 
 <!DOCTYPE html>
@@ -26,6 +26,7 @@ echo $_SESSION['id_usuario'];
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+      <link href="css/estilo.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -57,15 +58,15 @@ echo $_SESSION['id_usuario'];
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Anuncios</a></li>
-            <li><a href="#about">Comentarios</a></li>
+            <li><a href="AdminComentarios.php">Comentarios</a></li>
             <li><a href="#contact">Usuarios</a></li>
           </ul>
             <ul class="nav navbar-nav navbar-right">
             <li class="active"><a>Administrador <?php if (isset($_SESSION['id_usuario'])){
-echo $_SESSION['usuario'];
+echo $_SESSION['usuario']."  ";
 }
 else { echo "nay";
-     }?><button class="btn btn-default" type="button">Cerrar Sesión</button></a></li>
+     }?><button class="btn btn-danger btn-xs" id="logout" type="button">Cerrar Sesión</button></a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -100,7 +101,7 @@ else { echo "nay";
                 </thead>
                 
                  <?php
-                        $query = "SELECT * FROM clasificado order by id_clasificado asc";
+                        $query = "SELECT * FROM clasificado order by id_clasificado desc";
                         $res = $mysql->query($query);
                         
                         
@@ -283,8 +284,41 @@ else { echo "nay";
           
       </script>
 
-      
+      <script>
+          $( "#logout" ).click(function() {
+              //alert("loggiaout!");
+                    $.ajax({
+                        type: "GET",
+                        url: "api/logout",
+                        success: function(data) {
+                            console.log(data)
+                            if(data == true){
+                            window.location.replace("listarAnuncios.php");
+                               // window.location.href = "AdminAnuncios.php";
+                            }
+                            if (data == 1){
+                            window.location.replace("AdminAnuncios.php");
+                            }
+                            if(data == false){
+                            alert("Algo salio mal!!")
+                            }
+//                            location.reload(true)
+                        },
+                        error: function(data){
+                            console.log(data)
+                        }
+
+                    })       
+            })
+          
+      </script>
       
       
   </body>
 </html>
+<?php
+                                                                                                                                  }
+else {
+    redirect("listaranuncios.php", $statusCode = 303);
+}
+?>

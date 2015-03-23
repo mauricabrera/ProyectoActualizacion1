@@ -20,6 +20,7 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SES
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/estilo.css" rel="stylesheet">
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="js/ie-emulation-modes-warning.js"></script>
@@ -29,7 +30,43 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SES
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-       
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+            <script>
+            $(document).ready(function(){
+                // Connect to our node/websockets server
+                var socket = io.connect('http://localhost:3000');
+
+                // Initial set of notes, loop through and add to list
+                socket.on('initial notes', function(data){
+                    var html = ''
+                    for (var i = 0; i < data.length; i++){
+                        // We store html as a var then add to DOM after for efficiency
+                        html += '<li>' + data[i].note + '</li>'
+                    }
+                    $('#notes').html(html)
+                })
+
+                // New note emitted, add it to our list of current notes
+                socket.on('new note', function(data){
+                    $('#notes').append('<li>' + data.note + '</li>')
+                })
+
+                // New socket connected, display new count on page
+                socket.on('users connected', function(data){
+                    $('#usersConnected').html('Users connected: ' + data)
+                })
+
+                // Add a new (random) note, emit to server to let others know
+                $('#newNote').click(function(){
+                    var newNote = 'This is a random ' + (Math.floor(Math.random() * 100) + 1)  + ' note'
+                    socket.emit('new note', {note: newNote})
+                })
+            })
+            </script> 
+      
+    
+      
+      
   </head>
 
   <body style="padding-top: 70px;">
@@ -95,6 +132,7 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SES
                 <input type="date" id="dateIni" name="InitDate" class="form-control" />
                 <input type="submit" value="Buscar" class="btn btn-default" formtarget="_self" formmethod="get"/>
                 </form>
+               
               </div>
             </div>
           </div>
@@ -200,6 +238,9 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SES
                             window.location.replace("listarAnuncios.php");
                                // window.location.href = "AdminAnuncios.php";
                             }
+                            if (data == 1){
+                             window.location.replace("AdminAnuncios.php");
+                            }
                             if(data == false){
                             alert("Algo salio mal!!")
                             }
@@ -238,6 +279,10 @@ else {
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/estilo.css" rel="stylesheet">
+      
+    <!-- DataTables CSS --> 
+<!--    <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css"> -->
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="js/ie-emulation-modes-warning.js"></script>
@@ -309,7 +354,7 @@ else {
           <div class="well well-lg"> 
             <div class="row">
               <div class="col-sm-12">
-                <p>Buscar por fecha:</p>
+                <p>Buscar por fecha:</p>  
                 <form id="form1">
                 <label for="dateIni">Fecha: </label>
                 <input type="date" id="dateIni" name="InitDate" class="form-control" />
@@ -349,6 +394,7 @@ else {
                 }
                  echo "<div class=row>    
             <br>
+            
             <div class=col-md-2 col-sm-3 text-center>
               <a class=story-img href=#><img src=".$imgURL."></a>
             </div>
@@ -391,6 +437,12 @@ else {
 	<footer class="footer">
       <div class="container">
         <p class="text-muted">Competencia Actualizacion I 2015</p>
+          <time></time><br><br><hr>
+          <div id="container">   Loading ... 
+           
+          </div>
+          <hr>
+          <table id="tablita"></table>
       </div>
     </footer>
 
@@ -403,7 +455,96 @@ else {
 
 	<script src="js/jquery-1.11.2.min.js"> </script> 
 
+      
+      
+      <!-- DataTables --> 
+<!--      <script type="text/javascript" charset="utf8" src="js/jquery.dataTables.js"></script>-->
+
+      
+      
+<!--
+    <script src="http://localhost:8000/socket.io/socket.io.js"></script>
+    <script>
+
+        // create a new websocket
+        var socket = io.connect('http://localhost:8000');
+        // on message received we print all the data inside the #container div
+        socket.on('notification', function (data) {
+            
+            console.log(data);
+//                        $('#tablita').DataTable({ data: data });
+
+   
+        var usersList = '<div class="row">';
+        $.each(data.users,function(index,clasificado){
+            usersList += '<div class="col-md-2"><img style="float: center; vertical-align:middle;" height="100" width="100" src="php/uploads/' + clasificado.imagen1 + '"></div>' +
+                         '<div class="col-md-10"><h3>' + clasificado.titulo + "</h3><br>" +
+                         '<p>' + clasificado.texto + '</p><br><p class="lead"><a class="btn btn-default" href="comentarios.php?id_clasificado=' + clasificado.id_clasificado +'">Ver Más</a></p>' +
+                             '<h4><a >'+ clasificado.updated_at + "</h4></a><br><hr></div>";
+           
+        });
+       usersList += "</div>";
+        $('#container').html(usersList);
+   
+        $('time').html('Last Update at:' + data.time);
+      });
+    </script>  
+-->
+      
+      
+      <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script>
+$(document).ready(function(){
+    // Connect to our node/websockets server
+    var socket = io.connect('http://localhost:3000');
+ 
+    var datits;
+    
+    // Initial set of notes, loop through and add to list
+    socket.on('initial notes', function(data){
+        console.log(data);
+        
+        datits = data;
+    
+        var html = '<div class="row">'
+        for (var i = 0; i < data.length; i++){
+            // We store html as a var then add to DOM after for efficiency
+            html += '<div class="col-md-2"><img style="float: center; vertical-align:middle;" height="100" width="100" src="php/uploads/' + data[i].imagen1 + '"></div>' +
+                         '<div class="col-md-10"><h3>' + data[i].titulo + "</h3><br>" +
+                         '<p>' + data[i].texto + '</p><br><p class="lead"><a class="btn btn-default" href="comentarios.php?id_clasificado=' + data[i].id_clasificado +'">Ver Más</a></p>' +
+                             '<h4><a >'+ data[i].updated_at + "</h4></a><br><hr></div>";
+        }
+        
+        
+       html += "</div>";
+        $('#container').html(html)
+    })
+ 
+    // New note emitted, add it to our list of current notes
+    socket.on('new note', function(data){
+        datits += data;
+        
+        console.log(data)
+       $('#container').prepend('<div class="col-md-2"><img style="float: center; vertical-align:middle;" height="100" width="100" src="php/uploads/' + data.imagen1 + '"></div>' +
+                         '<div class="col-md-10"><h3>' + data.titulo + "</h3><br>" +
+                         '<p>' + data.texto + '</p><br><p class="lead"><a class="btn btn-default" href="comentarios.php?id_clasificado=' + data.id_clasificado +'">Ver Más</a></p>' + '<h4><a >'+ data.updated_at + "</h4></a><br><hr></div>");
+    })
+ 
+    // New socket connected, display new count on page
+    socket.on('users connected', function(data){
+      //  $('#usersConnected').html('Users connected: ' + data)
+    })
+ 
+    // Add a new (random) note, emit to server to let others know
+    $('#newNote').click(function(){
+//        var newNote = 'This is a random ' + (Math.floor(Math.random() * 100) + 1)  + ' note'
+//        socket.emit('new note', {texto: newNote})
+    })
+})
+</script>
+      
 	<script src="js/bootstrap.min.js"></script>
+
       
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="js/ie10-viewport-bug-workaround.js"></script>
@@ -448,6 +589,9 @@ else {
                             if(data == true){
                             window.location.replace("listarAnuncios.php");
                                // window.location.href = "AdminAnuncios.php";
+                            }
+                            if (data == 1){
+                             window.location.replace("AdminAnuncios.php");
                             }
                             if(data == false){
                             alert("Credenciales Incorrectas!")

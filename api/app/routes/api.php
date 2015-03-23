@@ -378,6 +378,106 @@ $app->post("/eliminarclasificado/", function() use($app)
 	
 });
 
+
+$app->post("/actualizarcomentario/", function() use($app)
+{
+    
+  try{   
+        $id_clasificado = $app->request->post('id_comentario');
+        $titulo = $app->request->post('nombre');
+        $texto = $app->request->post('texto');
+
+        $db = connect_db();
+      
+        $stmt = mysqli_prepare($db, "UPDATE `clasificados`.`comentario` SET `nombre` = ?, `texto` = ?  WHERE `comentario`.`id_comentario` = ?");
+
+            if ($stmt === false) {
+                trigger_error('Statement failed! ' . htmlspecialchars(mysqli_error($db)), E_USER_ERROR);
+            }
+
+           // $id_clasificado = null;
+            $bind = mysqli_stmt_bind_param($stmt, "ssi", $titulo, $texto, $id_clasificado);
+
+            if ($bind === false) {
+                trigger_error('Bind param failed!', E_USER_ERROR);
+            } 
+
+            $exec = mysqli_stmt_execute($stmt);
+
+            if ($exec === false) {
+                trigger_error('Statement execute failed! ' . htmlspecialchars(mysqli_stmt_error($stmt)), E_USER_ERROR);	
+            }
+
+        $app->response->headers->set("Content-type", "application/json");
+		$app->response->status(200);
+		$app->response->body(json_encode(true));
+      //  mysqli_stmt_close($stmt);
+        mysqli_close($db);
+
+       
+
+	}
+	catch(PDOException $e)
+	{
+		echo "Error: " . $e->getMessage();
+        $app->response->headers->set("Content-type", "application/json");
+		$app->response->status(200);
+		$app->response->body(json_encode(false));
+	}
+    
+	
+});
+
+
+
+$app->post("/eliminarcomentario/", function() use($app)
+{
+    
+  try{   
+        $id_comentario = $app->request->post('id_comentario');
+
+        $db = connect_db();
+      
+        $stmt = mysqli_prepare($db, "DELETE FROM `clasificados`.`comentario` WHERE `comentario`.`id_comentario` = ?");
+
+            if ($stmt === false) {
+                trigger_error('Statement failed! ' . htmlspecialchars(mysqli_error($db)), E_USER_ERROR);
+            }
+
+           // $id_clasificado = null;
+            $bind = mysqli_stmt_bind_param($stmt, "i", $id_comentario);
+
+            if ($bind === false) {
+                trigger_error('Bind param failed!', E_USER_ERROR);
+            } 
+
+            $exec = mysqli_stmt_execute($stmt);
+
+            if ($exec === false) {
+                trigger_error('Statement execute failed! ' . htmlspecialchars(mysqli_stmt_error($stmt)), E_USER_ERROR);	
+            }
+
+        $app->response->headers->set("Content-type", "application/json");
+		$app->response->status(200);
+		$app->response->body(json_encode(true));
+      //  mysqli_stmt_close($stmt);
+        mysqli_close($db);
+
+       
+
+	}
+	catch(PDOException $e)
+	{
+		echo "Error: " . $e->getMessage();
+        $app->response->headers->set("Content-type", "application/json");
+		$app->response->status(200);
+		$app->response->body(json_encode(false));
+	}
+    
+	
+});
+
+
 $app->post("/modificarpassword/", function() use($app)
 {
     
@@ -447,17 +547,30 @@ $app->get("/login/:usuario/:password", function($usuario, $password) use($app)
 	   }
         $resulta = mysqli_num_rows($result);
         
+        session_start();
+        
         if($resulta == 0) {
         $app->response->headers->set("Content-type", "application/json");
 		$app->response->status(200);
 		$app->response->body(json_encode(false));
-        }
-        else {
-        session_start();
-            
+        } elseif ($data[0]["admin"] == 1){
             $_SESSION['id_usuario'] = $data[0]["id_usuario"];
             $_SESSION['usuario'] = $data[0]["usuario"];
             $_SESSION["password"] = md5($data[0]["password"]);
+            $_SESSION['nombres'] = $data[0]["nombres"];
+            $_SESSION['apellidos'] = $data[0]["apellidos"];
+            $_SESSION['admin'] = $data[0]["admin"];
+            $app->response->headers->set("Content-type", "application/json");
+		    $app->response->status(200);
+		    $app->response->body(json_encode(1));
+        }
+        else {
+        
+            $_SESSION['id_usuario'] = $data[0]["id_usuario"];
+            $_SESSION['usuario'] = $data[0]["usuario"];
+            $_SESSION["password"] = md5($data[0]["password"]);
+            $_SESSION['nombres'] = $data[0]["nombres"];
+            $_SESSION['apellidos'] = $data[0]["apellidos"];
           //  echo $_SESSION['id_usuario'];
             $app->response->headers->set("Content-type", "application/json");
 		    $app->response->status(200);
@@ -533,5 +646,164 @@ $app->get("/logout", function() use($app) {
     
 
 });
+
+
+$app->get("/clasificado/:id", function($id) use($app)
+{
+	try{
+
+        $db = connect_db();
+    
+	$result = $db->query( 'SELECT * FROM clasificado WHERE id_clasificado = '.$id );
+        if($result === false) {
+          trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->errno . ' ' . $conn->error, E_USER_ERROR);
+        }
+        
+        
+       
+     $db = null;
+    
+    /* verificar la conexión */
+        if (mysqli_connect_errno()) {
+            die("Falló la conexión: %s\n".$mysqli->connect_error);
+        }
+//        else {
+//            echo "conecto";
+//        }
+    
+    
+	while ( $row = $result->fetch_array(MYSQLI_ASSOC) ) {
+		$data[] = $row;
+        
+	}
+        $resulta = mysqli_num_rows($result);
+        
+        if($resulta == 0) {
+            $app->response->headers->set("Content-type", "application/json");
+            $app->response->status(200);
+            $app->response->body(json_encode(false));
+        }
+        else {
+            $app->response->headers->set("Content-type", "application/json");
+            $app->response->status(200);
+            $app->response->body(json_encode($data));
+        }
+
+        
+
+		
+	}
+	catch(PDOException $e)
+	{
+		echo "Error: " . $e->getMessage();
+	}
+});
+
+$app->get("/comentarios/:id", function($id) use($app)
+{
+	try{
+
+        $db = connect_db();
+    
+	$result = $db->query( 'SELECT * FROM comentario WHERE id_clasificado = '.$id );
+        if($result === false) {
+          trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $conn->errno . ' ' . $conn->error, E_USER_ERROR);
+        }
+        
+        
+       
+     $db = null;
+    
+    /* verificar la conexión */
+        if (mysqli_connect_errno()) {
+            die("Falló la conexión: %s\n".$mysqli->connect_error);
+        }
+//        else {
+//            echo "conecto";
+//        }
+    
+    
+	while ( $row = $result->fetch_array(MYSQLI_ASSOC) ) {
+		$data[] = $row;
+        
+	}
+        $resulta = mysqli_num_rows($result);
+        
+        if($resulta == 0) {
+            $app->response->headers->set("Content-type", "application/json");
+            $app->response->status(200);
+            $app->response->body(json_encode(false));
+        }
+        else {
+            $app->response->headers->set("Content-type", "application/json");
+            $app->response->status(200);
+            $app->response->body(json_encode($data));
+        }
+
+        
+
+		
+	}
+	catch(PDOException $e)
+	{
+		echo "Error: " . $e->getMessage();
+	}
+});
+
+$app->post("/comentar/:id", function($id) use($app)
+{
+    
+  try{   
+        $id_clasificado = $id;
+        $nombre = $app->request->post('nombre');
+        $texto = $app->request->post('texto');
+        
+        $db = connect_db();
+
+        $stmt = mysqli_prepare($db, "INSERT INTO `clasificados`.`comentario` ( `nombre`, `texto`, `id_clasificado`, `created_at`) VALUES (?, ?, ?, CURRENT_TIMESTAMP)");
+
+            if ($stmt === false) {
+                trigger_error('Statement failed! ' . htmlspecialchars(mysqli_error($db)), E_USER_ERROR);
+            }
+
+        $bind = mysqli_stmt_bind_param($stmt, "ssi", $nombre, $texto, $id_clasificado);
+
+            if ($bind === false) {
+                trigger_error('Bind param failed!', E_USER_ERROR);
+                $app->response->headers->set("Content-type", "application/json");
+                $app->response->status(200);
+                $app->response->body(json_encode(false));
+                mysqli_close($db);
+            } 
+
+            $exec = mysqli_stmt_execute($stmt);
+
+            if ($exec === false) {
+                trigger_error('Statement execute failed! ' . htmlspecialchars(mysqli_stmt_error($stmt)), E_USER_ERROR); 
+                $app->response->headers->set("Content-type", "application/json");
+                $app->response->status(200);
+                $app->response->body(json_encode(false));
+                mysqli_close($db);
+            }
+
+        $app->response->headers->set("Content-type", "application/json");
+        $app->response->status(200);
+        $app->response->body(json_encode(true));
+        mysqli_close($db);
+
+       
+
+  }
+  catch(PDOException $e)
+  {
+    echo "Error: " . $e->getMessage();
+        $app->response->headers->set("Content-type", "application/json");
+    $app->response->status(200);
+    $app->response->body(json_encode(false));
+  }
+    
+  
+});
+
 
 ?>

@@ -1,0 +1,314 @@
+<?php
+require_once('libs/Mysql.php');
+$mysql = new Mysql();
+session_start();
+
+function redirect($url, $statusCode = 303)
+{
+   header('Location: ' . $url, true, $statusCode);
+   die();
+}
+
+if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SESSION['password']) && ($_SESSION['admin'] == 1)){
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mauri C.">
+    <link rel="icon" href="images/favicon.ico">
+
+    <title>Comentarios | Administrador</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+      <link href="css/estilo.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+       
+  </head>
+
+  <body style="min-height: 2000px; padding-top: 70px;">
+
+	<head>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">FREE CLASIFICADOS</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="AdminAnuncios.php">Anuncios</a></li>
+            <li class="active"><a>Comentarios</a></li>
+            <li><a href="#contact">Usuarios</a></li>
+          </ul>
+            <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a>Administrador <?php if (isset($_SESSION['id_usuario'])){
+echo $_SESSION['usuario']."  ";
+}
+else { echo "nay";
+     }?><button class="btn btn-danger btn-xs" id="logout" type="button">Cerrar Sesión</button></a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+	</head>
+
+    <!-- Begin page content -->
+    <div class="container">
+<!--
+        <div class="jumbotron">
+        <h1 class="text-center">Navbar example</h1>
+        <p>Chaaachararaaa</p>
+        
+        <p>
+        
+        </p>
+        </div>
+-->
+        
+        <div class="table-responsive">
+            <table class="table" id="table">
+                <thead>
+                    <tr>
+                        <th class="text-center">ID Clasificado</th>
+                        <th class="text-center">Titulo</th>
+                        <th class="text-center">Texto</th>
+                        <th class="text-center">ID Tipo Clasificado</th>
+                        <th class="text-center">Fecha Creado</th>
+                        <th class="text-center">Fecha Actualizado</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                
+                 <?php
+                        $query = "SELECT * FROM comentario order by id_clasificado desc";
+                        $res = $mysql->query($query);
+                        
+                        
+                            foreach ($res as $row){
+                                echo "<tr>";
+                                echo "<td>".$row["comentario"]["id_comentario"]."</td>";
+                                echo "<td>".$row["comentario"]["nombre"]."</td>";
+                                echo "<td>".$row["comentario"]["texto"]."</td>";
+                                echo "<td>".$row["comentario"]["id_clasificado"]."</td>";
+                                echo "<td>".$row["comentario"]["created_at"]."</td>";
+                                echo "<td>".$row["comentario"]["updated_at"]."</td>";
+                                echo '<td class="text-center"><button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal" data-id="'.$row["comentario"]["id_comentario"].'" data-texto="'.$row["comentario"]["texto"].'" data-nombre="'.$row["comentario"]["nombre"].'"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Actualizar</button><br><br><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-id="'.$row["comentario"]["id_comentario"].'"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar</button></td>'; 
+                                echo "</tr>";
+                            }	
+                            
+                        
+                    ?>
+            </table>
+        </div>
+
+        
+<!--        Modal Actualizar-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">Actualizar Comentario con ID:</h4>
+      </div>
+      <div class="modal-body">
+        <form id="formulario">
+            <input type="hidden" class="form-control" id="id_comentario" name="id_comentario">
+          <div class="form-group">
+            <label for="recipient-name" class="control-label">Nombre:</label>
+            <input type="text" class="form-control" id="recipient-name" name="nombre">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="control-label">Texto:</label>
+            <textarea class="form-control" id="message-text" name="texto"></textarea>
+          </div>
+           
+            
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="actualizar"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Actualizar</button>
+      </div>
+    </div>
+  </div>
+</div>
+      
+        
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">Eliminar Clasificado con ID:</h4>
+          <form id="formularioEliminar">
+            <input type="hidden" class="form-control" id="id_comentarioEliminar" name="id_comentario">
+          </form>
+          
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" id="eliminar"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      </div>
+	 
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">Competencia Actualizacion I 2015</p>
+      </div>
+    </footer>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
+   
+
+	<script src="js/jquery-1.11.2.min.js"> </script> 
+
+	<script src="js/bootstrap.min.js"></script>
+      
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+	
+
+      <script>
+          
+          $('#exampleModal').on('show.bs.modal', function (event) {
+              var button = $(event.relatedTarget) // Button that triggered the modal
+             
+              var nombre = button.data('nombre')
+              var texto = button.data('texto')
+              var id = button.data('id')
+              // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+              // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+              var modal = $(this)
+              modal.find('.modal-title').text('Actualizar Comentario con e ID: ' + id)
+              $("#id_comentario").val(id)
+              $("#recipient-name").val(nombre)
+              modal.find('.modal-body textarea').val(texto)
+            })
+          
+          $( "#actualizar" ).click(function() {
+              var dataString = $('#formulario').serialize()              
+                    $.ajax({
+                        type: "POST",
+                        url: "api/actualizarcomentario",
+                        data: dataString,
+                        success: function(data) {
+                            alert("¡Comentario Actualizado!")
+                            location.reload(true)
+                        },
+                        error: function(data){
+                            console.log(data)
+                        }
+
+                    })
+            })
+          
+          $('#deleteModal').on('show.bs.modal', function (event) {
+              var button = $(event.relatedTarget) // Button that triggered the modal
+              var id = button.data('id')
+              // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+              // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+              var modal = $(this)
+              modal.find('.modal-title').text('¿Está seguro de eliminar comentario con ID: ' + id + '?')
+              $("#id_comentarioEliminar").val(id)
+            
+            })
+          
+          $( "#eliminar" ).click(function() {
+              var dataString = $('#formularioEliminar').serialize()  
+              console.log(dataString)
+                    $.ajax({
+                        type: "POST",
+                        url: "api/eliminarcomentario",
+                        data: dataString,
+                        success: function(data) {
+                            alert("¡Comentario Eliminado!")
+                            location.reload(true)
+                        },
+                        error: function(data){
+                            console.log(data)
+                        }
+
+                    })
+            })
+          
+      </script>
+
+      <script>
+          $( "#logout" ).click(function() {
+              //alert("loggiaout!");
+                    $.ajax({
+                        type: "GET",
+                        url: "api/logout",
+                        success: function(data) {
+                            console.log(data)
+                            if(data == true){
+                            window.location.replace("listarAnuncios.php");
+                               // window.location.href = "AdminAnuncios.php";
+                            }
+                            if (data == 1){
+                            window.location.replace("AdminAnuncios.php");
+                            }
+                            if(data == false){
+                            alert("Algo salio mal!!")
+                            }
+//                            location.reload(true)
+                        },
+                        error: function(data){
+                            console.log(data)
+                        }
+
+                    })       
+            })
+          
+      </script>
+      
+      
+  </body>
+</html>
+<?php
+                                                                                                                                  }
+else {
+    redirect("listaranuncios.php", $statusCode = 303);
+}
+?>

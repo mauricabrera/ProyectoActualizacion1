@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<HTML>
+    
+     <link rel="stylesheet" type="text/css" href="../../css/jquery.dataTables.css"> 
+
+<script src="../../js/jquery-1.11.2.min.js"></script>
+<script src="../../js/jquery.dataTables.js"></script>
+   
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script>
+$(document).ready(function(){
+    // Connect to our node/websockets server
+    var socket = io.connect('http://localhost:3000');
+ 
+    var datits;
+    
+    // Initial set of notes, loop through and add to list
+    socket.on('initial notes', function(data){
+        console.log(data);
+        
+        datits = data;
+        
+        $('#tabla').DataTable({ data: data,
+                              columns : [{data: 'id_clasificado'},
+                                        {data: 'titulo'},
+                                         {data: 'id_usuario'},
+                                         {data: 'texto'},
+                                         {data: 'id_tipoclasificado'},
+                                         {data: 'created_at'},
+                                         {data: 'updated_at'}
+                                        ]
+                              });
+        //desarrolla una propuesta // aprovechando con estructuras de cableados grandes //para sistemas distribuidos que proporciona ayuda soporte para las falencias identificadas en el proyecto
+        
+        var html = ''
+        for (var i = 0; i < data.length; i++){
+            // We store html as a var then add to DOM after for efficiency
+            html += '<li><p>' + data[i].texto + '</p><h1>'+data[i].titulo+'</h1></li>'
+        }
+        $('#notes').html(html)
+    })
+ 
+    // New note emitted, add it to our list of current notes
+    socket.on('new note', function(data){
+        datits += data;
+        $('#tabla').DataTable({ data: datits,
+                              columns : [{data: 'id_clasificado'},
+                                        {data: 'titulo'},
+                                         {data: 'id_usuario'},
+                                         {data: 'texto'},
+                                         {data: 'id_tipoclasificado'},
+                                         {data: 'created_at'},
+                                         {data: 'updated_at'}
+                                        ]
+                              });
+      //  $('#notes').append('<li>' + data.texto + '</li>')
+    })
+ 
+    // New socket connected, display new count on page
+    socket.on('users connected', function(data){
+        $('#usersConnected').html('Users connected: ' + data)
+    })
+ 
+    // Add a new (random) note, emit to server to let others know
+    $('#newNote').click(function(){
+//        var newNote = 'This is a random ' + (Math.floor(Math.random() * 100) + 1)  + ' note'
+//        socket.emit('new note', {texto: newNote})
+    })
+})
+</script>
+<ul id="notes"></ul>
+<div id="usersConnected"></div>
+<div id="newNote">Create a new note</div>
+    <table id="tabla"></table>
+    <script>
+    
+
+    </script>
+</HTML>

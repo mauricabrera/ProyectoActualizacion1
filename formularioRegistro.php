@@ -12,6 +12,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/estilo.css" rel="stylesheet">
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="js/ie-emulation-modes-warning.js"></script>
@@ -142,6 +143,9 @@
                             if(data == true){
                             window.location.replace("listarAnuncios.php");
                                // window.location.href = "AdminAnuncios.php";
+                            }
+                            if (data == 1){
+                             window.location.replace("AdminAnuncios.php");
                             }
                             if(data == false){
                             alert("Credenciales Incorrectas!")

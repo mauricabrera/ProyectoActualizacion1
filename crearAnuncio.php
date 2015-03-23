@@ -29,7 +29,7 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SES
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/crearAnuncio.css" rel="stylesheet">
+    <link href="css/estilo.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -128,6 +128,7 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SES
 	<script src="js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="js/ie10-viewport-bug-workaround.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
 	<script>
 $(document).ready(function()
 {       
@@ -147,17 +148,17 @@ $(document).ready(function()
 		fileName:"myfile",
         onSubmit:function(files)
             {
-                $("#eventsmessage").html($("#eventsmessage").html()+"<br/>Submitting:"+JSON.stringify(files));
+                //$("#eventsmessage").html($("#eventsmessage").html()+"<br/>Submitting:"+JSON.stringify(files));
             },
         onSuccess:function(files,data,xhr)
             {
-                $("#eventsmessage").html($("#eventsmessage").html()+"<br/>Success for: "+JSON.stringify(data));
+               // $("#eventsmessage").html($("#eventsmessage").html()+"<br/>Success for: "+JSON.stringify(data));
                 resultdata.push(data);
 
             },
         afterUploadAll:function(obj)
             {
-                $("#eventsmessage").html($("#eventsmessage").html()+"<br/>All files are uploaded"+obj);
+               // $("#eventsmessage").html($("#eventsmessage").html()+"<br/>All files are uploaded"+obj);
                 
                 console.log(obj);
                 console.log(obj.getResponses());
@@ -165,12 +166,12 @@ $(document).ready(function()
                 var respond = obj.getResponses();
                 
                 for (var i = 0; i < respond.length; i++){
-                    $("#eventsmessage").html($("#eventsmessage").html()+"<br/>All files are uploaded and file name"+i+respond[i]);
+                   // $("#eventsmessage").html($("#eventsmessage").html()+"<br/>All files are uploaded and file name"+i+respond[i]);
                     console.log("<br/>All files are uploaded and file name"+i+respond[i]);
                 }
                 
                 for (var i = 0; i < resultdata.length; i++){
-                    $("#eventsmessage").html($("#eventsmessage").html()+"<br/>All files are uploaded and file name"+i+resultdata[i]);
+                   // $("#eventsmessage").html($("#eventsmessage").html()+"<br/>All files are uploaded and file name"+i+resultdata[i]);
                     console.log("<br/>All files are uploaded and file name"+i+resultdata[i]);
                 }
                 
@@ -184,8 +185,29 @@ $(document).ready(function()
                         success: function(data) {
                            
                             console.log(data);
+                            var socket = io.connect('http://localhost:3000');
+                            $.ajax({
+                                type: "GET",
+                                url: "api/clasificado/" + data,
+                                success: function(data) {
+                                    console.log(data);
+
+                                    $.each(data, function(index, clasificado) {
+        //                                    $("#imagen").append ('<img height="100" width="100" src="php/uploads/' + clasificado.imagen1 + '"></li>' );
+                                            console.log(clasificado)
+                                            socket.emit('new note', clasificado)
+
+                                        });
+
+                                },
+                                error: function(data){
+                                    console.log(data);
+                                }
+                            });
+                            
+                           // window.location.replace("listarAnuncios.php");
                             alert("¡Clasificado insertado!");
-                            window.location.reload();
+                            
                         },
                         error: function(data){
                             
@@ -235,6 +257,9 @@ $(document).ready(function()
                             window.location.replace("listarAnuncios.php");
                                // window.location.href = "AdminAnuncios.php";
                             }
+                            if (data == 1){
+                            window.location.replace("AdminAnuncios.php");
+                            }
                             if(data == false){
                             alert("Algo salio mal!!")
                             }
@@ -273,7 +298,7 @@ else {
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/crearAnuncio.css" rel="stylesheet">
+    <link href="css/estilo.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -374,6 +399,8 @@ else {
 	<script src="js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="js/ie10-viewport-bug-workaround.js"></script>
+        <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+
 	<script>
 $(document).ready(function()
 {       
@@ -393,17 +420,17 @@ $(document).ready(function()
 		fileName:"myfile",
         onSubmit:function(files)
             {
-                $("#eventsmessage").html($("#eventsmessage").html()+"<br/>Submitting:"+JSON.stringify(files));
+                //$("#eventsmessage").html($("#eventsmessage").html()+"<br/>Submitting:"+JSON.stringify(files));
             },
         onSuccess:function(files,data,xhr)
             {
-                $("#eventsmessage").html($("#eventsmessage").html()+"<br/>Success for: "+JSON.stringify(data));
+               // $("#eventsmessage").html($("#eventsmessage").html()+"<br/>Success for: "+JSON.stringify(data));
                 resultdata.push(data);
 
             },
         afterUploadAll:function(obj)
             {
-                $("#eventsmessage").html($("#eventsmessage").html()+"<br/>All files are uploaded"+obj);
+              //  $("#eventsmessage").html($("#eventsmessage").html()+"<br/>All files are uploaded"+obj);
                 
                 console.log(obj);
                 console.log(obj.getResponses());
@@ -411,12 +438,12 @@ $(document).ready(function()
                 var respond = obj.getResponses();
                 
                 for (var i = 0; i < respond.length; i++){
-                    $("#eventsmessage").html($("#eventsmessage").html()+"<br/>All files are uploaded and file name"+i+respond[i]);
+                  //  $("#eventsmessage").html($("#eventsmessage").html()+"<br/>All files are uploaded and file name"+i+respond[i]);
                     console.log("<br/>All files are uploaded and file name"+i+respond[i]);
                 }
                 
                 for (var i = 0; i < resultdata.length; i++){
-                    $("#eventsmessage").html($("#eventsmessage").html()+"<br/>All files are uploaded and file name"+i+resultdata[i]);
+                  //  $("#eventsmessage").html($("#eventsmessage").html()+"<br/>All files are uploaded and file name"+i+resultdata[i]);
                     console.log("<br/>All files are uploaded and file name"+i+resultdata[i]);
                 }
                 
@@ -430,8 +457,30 @@ $(document).ready(function()
                         success: function(data) {
                            
                             console.log(data);
+                            var socket = io.connect('http://localhost:3000');
+                            $.ajax({
+                                type: "GET",
+                                url: "api/clasificado/" + data,
+                                success: function(data) {
+                                    console.log(data);
+
+                                    $.each(data, function(index, clasificado) {
+        //                                    $("#imagen").append ('<img height="100" width="100" src="php/uploads/' + clasificado.imagen1 + '"></li>' );
+                                            console.log(clasificado)
+                                            socket.emit('new note', clasificado)
+
+                                        });
+
+                                },
+                                error: function(data){
+                                    console.log(data);
+                                }
+                            });
+                           
+                            //window.location.replace("listarAnuncios.php");
                             alert("¡Clasificado insertado!");
-                            window.location.reload();
+                           // window.location.href = "listarAnuncios.php";
+                            
                         },
                         error: function(data){
                             
@@ -439,6 +488,7 @@ $(document).ready(function()
                         }
 
                     });
+
 
             },
         onError: function(files,status,errMsg)
@@ -491,6 +541,9 @@ $(document).ready(function()
                             if(data == true){
                             window.location.replace("listarAnuncios.php");
                                // window.location.href = "AdminAnuncios.php";
+                            }
+                            if (data == 1){
+                             window.location.replace("AdminAnuncios.php");
                             }
                             if(data == false){
                             alert("Credenciales Incorrectas!")
