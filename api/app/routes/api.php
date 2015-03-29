@@ -477,6 +477,109 @@ $app->post("/eliminarcomentario/", function() use($app)
 	
 });
 
+$app->post("/actualizarusuario/", function() use($app)
+{
+    
+  try{   
+        $id_usuario = $app->request->post('id_usuario');
+        $nombres = $app->request->post('nombres');
+        $apellidos = $app->request->post('apellidos');
+        $usuario = $app->request->post('usuario');
+        $password = $app->request->post('password');
+        $telefono = $app->request->post('telefono');
+        $email = $app->request->post('email');
+        $admin = $app->request->post('admin');
+
+        $db = connect_db();
+      
+        $stmt = mysqli_prepare($db, "UPDATE `clasificados`.`usuario` SET `nombres` = ?, `apellidos` = ?, `usuario` = ?, `password` = ?, `telefono` = ?, `email` = ?, `admin` = ?  WHERE `usuario`.`id_usuario` = ?");
+
+            if ($stmt === false) {
+                trigger_error('Statement failed! ' . htmlspecialchars(mysqli_error($db)), E_USER_ERROR);
+            }
+
+           // $id_clasificado = null;
+            $bind = mysqli_stmt_bind_param($stmt, "ssssisii", $nombres, $apellidos, $usuario, $password, $telefono, $email, $admin, $id_usuario);
+
+            if ($bind === false) {
+                trigger_error('Bind param failed!', E_USER_ERROR);
+            } 
+
+            $exec = mysqli_stmt_execute($stmt);
+
+            if ($exec === false) {
+                trigger_error('Statement execute failed! ' . htmlspecialchars(mysqli_stmt_error($stmt)), E_USER_ERROR);	
+            }
+
+        $app->response->headers->set("Content-type", "application/json");
+		$app->response->status(200);
+		$app->response->body(json_encode(true));
+      //  mysqli_stmt_close($stmt);
+        mysqli_close($db);
+
+       
+
+	}
+	catch(PDOException $e)
+	{
+		echo "Error: " . $e->getMessage();
+        $app->response->headers->set("Content-type", "application/json");
+		$app->response->status(200);
+		$app->response->body(json_encode(false));
+	}
+    
+	
+});
+
+
+
+$app->post("/eliminarusuario/", function() use($app)
+{
+    
+  try{   
+        $id_usuario = $app->request->post('id_usuario');
+
+        $db = connect_db();
+      
+        $stmt = mysqli_prepare($db, "DELETE FROM `clasificados`.`usuario` WHERE `usuario`.`id_usuario` = ?");
+
+            if ($stmt === false) {
+                trigger_error('Statement failed! ' . htmlspecialchars(mysqli_error($db)), E_USER_ERROR);
+            }
+
+           // $id_clasificado = null;
+            $bind = mysqli_stmt_bind_param($stmt, "i", $id_usuario);
+
+            if ($bind === false) {
+                trigger_error('Bind param failed!', E_USER_ERROR);
+            } 
+
+            $exec = mysqli_stmt_execute($stmt);
+
+            if ($exec === false) {
+                trigger_error('Statement execute failed! ' . htmlspecialchars(mysqli_stmt_error($stmt)), E_USER_ERROR);	
+            }
+
+        $app->response->headers->set("Content-type", "application/json");
+		$app->response->status(200);
+		$app->response->body(json_encode(true));
+      //  mysqli_stmt_close($stmt);
+        mysqli_close($db);
+
+       
+
+	}
+	catch(PDOException $e)
+	{
+		echo "Error: " . $e->getMessage();
+        $app->response->headers->set("Content-type", "application/json");
+		$app->response->status(200);
+		$app->response->body(json_encode(false));
+	}
+    
+	
+});
+
 
 $app->post("/modificarpassword/", function() use($app)
 {

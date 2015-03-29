@@ -40,7 +40,7 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SES
        
   </head>
 
-  <body style="min-height: 2000px; padding-top: 70px;">
+  <body style="padding-top: 20px;">
 
 	<head>
     <!-- Fixed navbar -->
@@ -59,7 +59,7 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SES
           <ul class="nav navbar-nav">
             <li><a href="AdminAnuncios.php">Anuncios</a></li>
             <li class="active"><a>Comentarios</a></li>
-            <li><a href="#contact">Usuarios</a></li>
+            <li><a href="AdminUsuarios.php">Usuarios</a></li>
           </ul>
             <ul class="nav navbar-nav navbar-right">
             <li class="active"><a>Administrador <?php if (isset($_SESSION['id_usuario'])){

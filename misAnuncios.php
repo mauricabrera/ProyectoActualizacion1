@@ -1,6 +1,7 @@
 <?php
 require_once('libs/Mysql.php');
 $mysql = new Mysql();
+
 session_start();
 
 function redirect($url, $statusCode = 303)
@@ -9,7 +10,7 @@ function redirect($url, $statusCode = 303)
    die();
 }
 
-if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SESSION['password']) && ($_SESSION['admin'] == 1)){
+if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SESSION['password'])){
 ?>
 
 <!DOCTYPE html>
@@ -19,14 +20,16 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SES
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <meta name="author" content="Mauri C.">
+    <meta name="author" content="">
     <link rel="icon" href="images/favicon.ico">
 
-    <title>Anuncios | Administrador</title>
+    <title>Crear Anuncio</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-      <link href="css/estilo.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/estilo.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -37,10 +40,13 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SES
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-       
+       <script src="js/jquery-1.11.2.min.js"> </script> 
+      <link href="css/uploadfile.css" rel="stylesheet">
+	<script src="js/jquery.uploadfile.js"></script>
+
   </head>
 
-  <body style=" padding-top: 10px;">
+  <body>
 
 	<head>
     <!-- Fixed navbar -->
@@ -57,16 +63,18 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SES
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Anuncios</a></li>
-            <li><a href="AdminComentarios.php">Comentarios</a></li>
-            <li><a href="AdminUsuarios.php">Usuarios</a></li>
+            <li><a href="listarAnuncios.php">Clasificados</a></li>
+            <li><a href="crearAnuncio.php">Crear Anuncio</a></li>
+            <li><a href="cambiarpassword.php">Modificar Password</a></li>
+            <li class="active"><a>Mis Anuncios</a></li>
           </ul>
+            
             <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a>Administrador <?php if (isset($_SESSION['id_usuario'])){
-echo $_SESSION['usuario']."  ";
-}
-else { echo "nay";
-     }?><button class="btn btn-danger btn-xs" id="logout" type="button">Cerrar Sesión</button></a></li>
+            <li class="active"><a>¡Bienvenido! <?php if (isset($_SESSION['id_usuario'])){
+                                            echo $_SESSION['usuario'];
+                                            }
+                                            else { echo "nay";}?>
+                <button type="button" class="btn btn-danger btn-xs" id="logout">Cerrar Sesión</button></a> </li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -101,10 +109,10 @@ else { echo "nay";
                 </thead>
                 
                  <?php
-                        $query = "SELECT * FROM clasificado order by id_clasificado desc";
+                        $query = "SELECT * FROM clasificado where id_usuario = ".$_SESSION["id_usuario"]." order by id_clasificado desc";
                         $res = $mysql->query($query);
-                        
-                        
+                       // $resulta = mysqli_num_rows($res);
+                            if ($res != null){
                             foreach ($res as $row){
                                 echo "<tr>";
                                 echo "<td>".$row["clasificado"]["id_clasificado"]."</td>";
@@ -115,6 +123,9 @@ else { echo "nay";
                                 echo "<td>".$row["clasificado"]["updated_at"]."</td>";
                                 echo '<td class="text-center"><button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal" data-whatever="'.$row["clasificado"]["titulo"].'" data-id="'.$row["clasificado"]["id_clasificado"].'" data-texto="'.$row["clasificado"]["texto"].'"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Actualizar</button><br><br><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-id="'.$row["clasificado"]["id_clasificado"].'"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar</button></td>'; 
                                 echo "</tr>";
+                            }
+                            } else {
+                                echo '<h1 class="text-center">Usted no creó ningun clasificado</h1>';
                             }	
                             
                         
@@ -186,16 +197,6 @@ else { echo "nay";
   </div>
 </div>
       
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
       </div>
 	 
 
@@ -212,15 +213,12 @@ else { echo "nay";
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
    
 
-	<script src="js/jquery-1.11.2.min.js"> </script> 
-
-	<script src="js/bootstrap.min.js"></script>
-      
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="js/ie10-viewport-bug-workaround.js"></script>
 	
 
-      <script>
+	<script src="js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+	<script>
           
           $('#exampleModal').on('show.bs.modal', function (event) {
               var button = $(event.relatedTarget) // Button that triggered the modal
@@ -283,8 +281,7 @@ else { echo "nay";
             })
           
       </script>
-
-      <script>
+    <script>
           $( "#logout" ).click(function() {
               //alert("loggiaout!");
                     $.ajax({
@@ -312,8 +309,6 @@ else { echo "nay";
             })
           
       </script>
-      
-      
   </body>
 </html>
 <?php

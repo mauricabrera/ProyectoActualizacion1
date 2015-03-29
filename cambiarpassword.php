@@ -56,6 +56,7 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SES
             <li><a href="listarAnuncios.php">Clasificados</a></li>
             <li><a href="crearAnuncio.php">Crear Anuncio</a></li>
             <li class="active"><a>Modificar Password</a></li>
+            <li><a href="misAnuncios.php">Mis Anuncios</a></li>
           </ul>
             
             <ul class="nav navbar-nav navbar-right">

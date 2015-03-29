@@ -142,11 +142,69 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SES
     </div>
     </div>
     <div class="container">
-      <div id="container">   Loading ... 
-           
+         <?php
+         if(!isset($_GET["page"])){
+             $_GET["page"] = 1;
+         }
+         $limit = (($_GET["page"] - 1)*5);
+         if(isset($_GET["type"])){
+            $where = "WHERE id_tipoclasificado=".$_GET["type"];
+            if(isset($_GET["InitDate"])){
+                $where = $where.", created_at >= '".$_GET["InitDate"]."'";
+            }
+         }
+        else {
+            $where = "";
+            if(isset($_GET["InitDate"])){
+                $where = "WHERE created_at >= '".$_GET["InitDate"]."'";
+            }
+        }
+            $query = "SELECT * FROM clasificado ".$where." order by updated_at desc LIMIT 5 OFFSET ".$limit;
+            $res = $mysql->query($query);
+            foreach ($res as $row){
+                $imgURL= $row["clasificado"]["imagen1"];
+                if(!preg_match("/^.imgages.*/i",$imgURL)){
+                    $imgURL= "//placehold.it/100 style=width:100px;height:100px class=img-circle";
+                }
+                 echo "<div class=row>    
+            <br>
+            <div class=col-md-2 col-sm-3 text-center>
+              <a class=story-img href=#><img src=".$imgURL."></a>
+            </div>
+            <div class=col-md-10 col-sm-9>
+              <h3>".$row["clasificado"]["titulo"]."</h3>
+              <div class=row>
+                <div class=col-xs-9>
+                  <p>".$row["clasificado"]["texto"]."</p>
+                  <p class=lead><button class=btn btn-default>Read More</button></p>
+                  <ul class=list-inline>
+                    <li><a href=#>".$row["clasificado"]["updated_at"]."</a></li>
+                  </div>
+                <div class=col-xs-3></div>
+              </div>
+              <br><br>
+            </div>
           </div>
-          <hr>
-          <table id="tablita"></table>   
+          <hr>";
+                }
+                if(isset($_GET["type"])){
+                    
+                    if(isset($_GET["InitDate"])){
+                        echo "<a href=?page=".($_GET["page"]+1)."&type=".$_GET["type"]."&InitDate=".$_GET["InitDate"]." class=btn btn-primary pull-right btnNext>Ver mas <i class=glyphicon glyphicon-chevron-right></i></a>";
+                    }
+                    else{
+                        echo "<a href=?page=".($_GET["page"]+1)."&type=".$_GET["type"]." class=btn btn-primary pull-right btnNext>Ver mas <i class=glyphicon glyphicon-chevron-right></i></a>";
+                    }
+                }
+                else{
+                    if(isset($_GET["InitDate"])){
+                        echo "<a href=?page=".($_GET["page"]+1)."&InitDate=".$_GET["InitDate"]." class=btn btn-primary pull-right btnNext>Ver mas <i class=glyphicon glyphicon-chevron-right></i></a>";
+                    }
+                    else{
+                        echo "<a href=?page=".($_GET["page"]+1)." class=btn btn-primary pull-right btnNext>Ver mas <i class=glyphicon glyphicon-chevron-right></i></a>";
+                    }
+                }
+            ?>
     </div>
     
 	<footer class="footer">
@@ -163,57 +221,6 @@ if (isset($_SESSION['id_usuario']) && isset($_SESSION['usuario']) && isset($_SES
    
 
 	<script src="js/jquery-1.11.2.min.js"> </script> 
-      <script src="http://localhost:3000/socket.io/socket.io.js"></script>
-<script>
-$(document).ready(function(){
-    // Connect to our node/websockets server
-    var socket = io.connect('http://localhost:3000');
- 
-    var datits;
-    
-    // Initial set of notes, loop through and add to list
-    socket.on('initial notes', function(data){
-        console.log(data);
-        
-        datits = data;
-    
-        var html = '<div class="row">'
-        for (var i = 0; i < data.length; i++){
-            // We store html as a var then add to DOM after for efficiency
-            html += '<div class="col-md-2"><img style="float: center; vertical-align:middle;" height="100" width="100" src="php/uploads/' + data[i].imagen1 + '"></div>' +
-                         '<div class="col-md-10"><h3>' + data[i].titulo + "</h3><br>" +
-                         '<p>' + data[i].texto + '</p><br><p class="lead"><a class="btn btn-default" href="comentarios.php?id_clasificado=' + data[i].id_clasificado +'">Ver Más</a></p>' +
-                             '<h4><a >'+ data[i].updated_at + "</h4></a><br><hr></div>";
-        }
-        
-        
-       html += "</div>";
-        $('#container').html(html)
-    })
- 
-    // New note emitted, add it to our list of current notes
-    socket.on('new note', function(data){
-        datits += data;
-        
-        console.log(data)
-       $('#container').prepend('<div class="col-md-2"><img style="float: center; vertical-align:middle;" height="100" width="100" src="php/uploads/' + data.imagen1 + '"></div>' +
-                         '<div class="col-md-10"><h3>' + data.titulo + "</h3><br>" +
-                         '<p>' + data.texto + '</p><br><p class="lead"><a class="btn btn-default" href="comentarios.php?id_clasificado=' + data.id_clasificado +'">Ver Más</a></p>' + '<h4><a >'+ data.updated_at + "</h4></a><br><hr></div>");
-    })
- 
-    // New socket connected, display new count on page
-    socket.on('users connected', function(data){
-      //  $('#usersConnected').html('Users connected: ' + data)
-    })
- 
-    // Add a new (random) note, emit to server to let others know
-    $('#newNote').click(function(){
-//        var newNote = 'This is a random ' + (Math.floor(Math.random() * 100) + 1)  + ' note'
-//        socket.emit('new note', {texto: newNote})
-    })
-})
-</script>
-      
 
 	<script src="js/bootstrap.min.js"></script>
       
@@ -368,7 +375,72 @@ else {
           </div>
           <hr>
           <table id="tablita"></table>
-       
+        
+        
+         <?php
+         if(!isset($_GET["page"])){
+             $_GET["page"] = 1;
+         }
+         $limit = (($_GET["page"] - 1)*5);
+         if(isset($_GET["type"])){
+            $where = "WHERE id_tipoclasificado=".$_GET["type"];
+            if(isset($_GET["InitDate"])){
+                $where = $where.", created_at >= '".$_GET["InitDate"]."'";
+            }
+         }
+        else {
+            $where = "";
+            if(isset($_GET["InitDate"])){
+                $where = "WHERE created_at >= '".$_GET["InitDate"]."'";
+            }
+        }
+            $query = "SELECT * FROM clasificado ".$where." order by updated_at desc LIMIT 5 OFFSET ".$limit;
+            $res = $mysql->query($query);
+            foreach ($res as $row){
+                $imgURL= $row["clasificado"]["imagen1"];
+                if(!preg_match("/^.imgages.*/i",$imgURL)){
+                    $imgURL= "//placehold.it/100 style=width:100px;height:100px class=img-circle";
+                }
+                 echo "<div class=row>    
+            <br>
+            
+            <div class=col-md-2 col-sm-3 text-center>
+              <a class=story-img href=#><img src=".$imgURL."></a>
+            </div>
+            <div class=col-md-10 col-sm-9>
+              <h3>".$row["clasificado"]["titulo"]."</h3>
+              <div class=row>
+                <div class=col-xs-9>
+                  <p>".$row["clasificado"]["texto"]."</p>
+                  <p class=lead><button class=btn btn-default>Read More</button></p>
+                  <ul class=list-inline>
+                    <li><a href=#>".$row["clasificado"]["updated_at"]."</a></li>
+                  </div>
+                <div class=col-xs-3></div>
+              </div>
+              <br><br>
+            </div>
+          </div>
+          <hr>";
+                }
+                if(isset($_GET["type"])){
+                    
+                    if(isset($_GET["InitDate"])){
+                        echo "<a href=?page=".($_GET["page"]+1)."&type=".$_GET["type"]."&InitDate=".$_GET["InitDate"]." class=btn btn-primary pull-right btnNext>Ver mas <i class=glyphicon glyphicon-chevron-right></i></a>";
+                    }
+                    else{
+                        echo "<a href=?page=".($_GET["page"]+1)."&type=".$_GET["type"]." class=btn btn-primary pull-right btnNext>Ver mas <i class=glyphicon glyphicon-chevron-right></i></a>";
+                    }
+                }
+                else{
+                    if(isset($_GET["InitDate"])){
+                        echo "<a href=?page=".($_GET["page"]+1)."&InitDate=".$_GET["InitDate"]." class=btn btn-primary pull-right btnNext>Ver mas <i class=glyphicon glyphicon-chevron-right></i></a>";
+                    }
+                    else{
+                        echo "<a href=?page=".($_GET["page"]+1)." class=btn btn-primary pull-right btnNext>Ver mas <i class=glyphicon glyphicon-chevron-right></i></a>";
+                    }
+                }
+            ?>
     </div>
     
 	<footer class="footer">

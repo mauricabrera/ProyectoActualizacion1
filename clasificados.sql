@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-03-2015 a las 05:27:34
+-- Tiempo de generación: 29-03-2015 a las 04:56:33
 -- Versión del servidor: 5.6.16-log
 -- Versión de PHP: 5.5.11
 
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `clasificado` (
   PRIMARY KEY (`id_clasificado`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_tipoclasificado` (`id_tipoclasificado`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=274 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=299 ;
 
 --
 -- Volcado de datos para la tabla `clasificado`
@@ -95,7 +95,6 @@ INSERT INTO `clasificado` (`id_clasificado`, `titulo`, `id_usuario`, `texto`, `i
 (154, 'hola que tal', 1, 'uh', 1, '13032015092026captImp.png', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-13 09:20:26', '2015-03-13 13:20:53'),
 (157, 'holita', 1, ':)', 7, '16032015004524Koala.jpg', '16032015004524Jellyfish.jpg', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-16 00:45:24', '2015-03-16 04:45:24'),
 (160, 'mauri id =4 creo', 1, 'primero', 10, '16032015005645Chrysanthemum.jpg', '16032015005645Desert.jpg', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-16 00:56:45', '2015-03-16 04:56:45'),
-(163, 'mauri ahora si id =4', 4, 'mauri', 1, '16032015005816Koala.jpg', '16032015005816Lighthouse.jpg', '16032015005816Tulips.jpg', '16032015005816Penguins.jpg', 'urlimagen5', 'urlimagen6', '2015-03-16 00:58:16', '2015-03-16 04:58:16'),
 (166, 'sajdh', 7, 'ejs', 7, '16032015011252Jellyfish.jpg', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-16 01:12:52', '2015-03-16 05:12:52'),
 (178, 'dserejk', 1, 'jkse', 7, '16032015011634Hydrangeas.jpg', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-16 01:16:34', '2015-03-16 05:16:34'),
 (181, 'uno', 4, 'sduih', 58, '17032015100657Captura.PNG', '17032015100657S__1630211.jpg', '17032015100657chacharichabraaa.PNG', '17032015100657menu.PNG', '17032015100657logocomteco.png', '17032015100657logoD1.jpg', '2015-03-17 10:06:57', '2015-03-17 14:06:57'),
@@ -128,7 +127,16 @@ INSERT INTO `clasificado` (`id_clasificado`, `titulo`, `id_usuario`, `texto`, `i
 (262, 'asdkn', 1, 'kn', 1, '2303201500042800707_edYYaB0fm8A_600x450.jpg', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-23 00:04:28', '2015-03-23 04:04:28'),
 (265, 'ksdj', 1, 'aksdkm', 7, '2303201500050200A0A_kga5NjYKmpa_600x450.jpg', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-23 00:05:02', '2015-03-23 04:05:02'),
 (268, 'asd', 1, 'vas', 1, '2303201500053700b0b_hV7q6iYpEfa_600x450.jpg', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-23 00:05:37', '2015-03-23 04:05:37'),
-(271, 'sdf', 1, 'sdfa', 58, '2303201500055800b0b_hV7q6iYpEfa_600x450.jpg', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-23 00:05:59', '2015-03-23 04:05:59');
+(271, 'sdf', 1, 'sdfa', 58, '2303201500055800b0b_hV7q6iYpEfa_600x450.jpg', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-23 00:05:59', '2015-03-23 04:05:59'),
+(274, 'sadjh', 1, 'jhsd', 7, '2303201509123700A0A_kga5NjYKmpa_600x450.jpg', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-23 09:12:37', '2015-03-23 13:12:37'),
+(277, 'sdfajkb', 1, 'hjb', 7, '2303201509134300b0b_hV7q6iYpEfa_600x450.jpg', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-23 09:13:43', '2015-03-23 13:13:43'),
+(280, 'sdfjh', 1, 'jhbsdf', 7, '2303201509141200C0C_8CSVoshVgn1_600x450.jpg', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-23 09:14:12', '2015-03-23 13:14:12'),
+(283, 'sdfh', 1, 'jh', 1, '2303201509143300b0b_hV7q6iYpEfa_600x450.jpg', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-23 09:14:33', '2015-03-23 13:14:33'),
+(286, 'sdfjk', 1, 'bh', 1, '2303201509151600C0C_8CSVoshVgn1_600x450.jpg', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-23 09:15:16', '2015-03-23 13:15:16'),
+(289, 'esAeee', 4, 'esees', 1, '2303201509430300m0m_3bSFvJmSNw5_600x450.jpg', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-23 09:43:03', '2015-03-23 13:59:07'),
+(292, 'dgcf', 1, 'ytf', 1, '25032015111730Information Systems Help Desk.png', '25032015111730Information Systems Help Desk.png', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-25 11:17:31', '2015-03-25 15:17:31'),
+(295, 'rd', 1, 'rd', 1, '25032015111824Information Systems Help Desk.png', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-25 11:18:24', '2015-03-25 15:18:24'),
+(298, '111', 1, 'hidf', 1, '25032015120733Information Systems Help Desk.png', 'urlimagen2', 'urlimagen3', 'urlimagen4', 'urlimagen5', 'urlimagen6', '2015-03-25 12:07:33', '2015-03-27 04:03:18');
 
 -- --------------------------------------------------------
 
@@ -145,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `comentario` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_comentario`),
   KEY `id_clasificado` (`id_clasificado`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
 
 --
 -- Volcado de datos para la tabla `comentario`
@@ -158,7 +166,8 @@ INSERT INTO `comentario` (`id_comentario`, `nombre`, `texto`, `id_clasificado`, 
 (13, 'Mauri C.', 'comentario uno', 199, '2015-03-20 00:59:25', '2015-03-20 04:59:25'),
 (16, 'estrada', 'alesr', 199, '2015-03-20 01:00:35', '2015-03-20 05:00:35'),
 (19, 'Mauri Cabrera E.', 'que hermosa moto!', 205, '2015-03-22 23:05:28', '2015-03-23 04:21:41'),
-(22, 'Enrique', 'Cual es su costo?', 205, '2015-03-22 23:07:59', '2015-03-23 03:07:59');
+(22, 'Enrique', 'Cual es su costo?', 205, '2015-03-22 23:07:59', '2015-03-23 03:07:59'),
+(25, 'sdfjh', 'hjh', 271, '2015-03-23 09:17:34', '2015-03-23 13:17:34');
 
 -- --------------------------------------------------------
 
@@ -205,7 +214,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `admin` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
 
 --
 -- Volcado de datos para la tabla `usuario`
@@ -214,7 +223,9 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 INSERT INTO `usuario` (`id_usuario`, `usuario`, `password`, `nombres`, `apellidos`, `telefono`, `email`, `created_at`, `updated_at`, `admin`) VALUES
 (1, 'anonimo', 'anonimo', 'Anonimo', '', ' 7077777', 'cabrera.mauri@gmail.com', '2015-03-01 20:34:18', '2015-03-23 03:00:19', 0),
 (4, 'mauri', 'mauri', 'Mauri', 'Cabrera Estrada', '214565', 'cabrera.mauri@gmail.com', '2015-03-14 17:19:21', '2015-03-14 21:23:04', 0),
-(7, 'mauricin', 'mauricin', 'Mauri', 'Cabreraaooasi', '0', 'cabrera.mauri@gmail.com', '2015-03-16 01:12:20', '2015-03-23 02:44:22', 1);
+(7, 'mauricin', 'mauricin', 'Mauri', 'Cabreraaooasi', '0', 'cabrera.mauri@gmail.com', '2015-03-16 01:12:20', '2015-03-23 02:44:22', 1),
+(13, 'estrada', 'estrada', 'estrada', 'estradaese', '2351', 'cabrera.mauri@gmail.com', '2015-03-23 09:51:03', '2015-03-24 14:21:52', 0),
+(16, 'esaeees', 'esaeees', 'esaooo', 'esaeseesehh', '325', 'cabrera.mauri@gmail.com', '2015-03-24 09:31:14', '2015-03-27 04:04:03', 1);
 
 --
 -- Restricciones para tablas volcadas

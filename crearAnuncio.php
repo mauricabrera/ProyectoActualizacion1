@@ -198,6 +198,9 @@ $(document).ready(function()
                                             socket.emit('new note', clasificado)
 
                                         });
+                                    
+                                    alert("¡Clasificado insertado!");
+                                    window.location.href = "listarAnuncios.php";
 
                                 },
                                 error: function(data){
@@ -206,7 +209,7 @@ $(document).ready(function()
                             });
                             
                            // window.location.replace("listarAnuncios.php");
-                            alert("¡Clasificado insertado!");
+                            //alert("¡Clasificado insertado!");
                             
                         },
                         error: function(data){
@@ -470,6 +473,9 @@ $(document).ready(function()
                                             socket.emit('new note', clasificado)
 
                                         });
+                                    
+                                    alert("¡Clasificado insertado!");
+                                    window.location.href = "listarAnuncios.php";
 
                                 },
                                 error: function(data){
@@ -478,8 +484,7 @@ $(document).ready(function()
                             });
                            
                             //window.location.replace("listarAnuncios.php");
-                            alert("¡Clasificado insertado!");
-                           // window.location.href = "listarAnuncios.php";
+                            
                             
                         },
                         error: function(data){

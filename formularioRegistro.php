@@ -172,9 +172,11 @@
                     alert("¡Ingrese un password!!")
                   } else if (password2 == ''){
                     alert("¡Ingrese un password2!!")
-                  } else if (password1 == password2) {
+                  }else if (($("#usuario").val() == '') || ($("#nombres").val() == '') || ($("#apellidos").val() == '') || ($("#telefono").val() == '') || ($("#email").val() == '')){
+                    alert("¡Llene todos los campos!")
+                  }  else if (password1 == password2) {
               
-                      alert(dataString)
+                      //alert(dataString)
                     $.ajax({
                         type: "POST",
                         url: "api/RegistrarUsuario",
@@ -183,6 +185,7 @@
                             console.log(data)
                             alert("¡Usuario Registrado! Ahora puedes iniciar Sesión :)")
                            // location.reload(true)
+                            window.location.href = "listarAnuncios.php";
                         },
                         error: function(data){
                             console.log(data)
